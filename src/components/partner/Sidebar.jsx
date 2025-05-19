@@ -14,7 +14,6 @@ import BrushIcon from '@mui/icons-material/Brush';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import ContactMailIcon from '@mui/icons-material/ContactMail';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 
@@ -24,8 +23,7 @@ const menuItems = [
   { text: 'Designs', icon: <BrushIcon /> },
   { text: 'Revenue', icon: <AttachMoneyIcon /> },
   { text: 'Order List', icon: <ListAltIcon /> },
-  { text: 'Support', icon: <SupportAgentIcon /> },
-  { text: 'Contact', icon: <ContactMailIcon /> },
+  { text: 'Chat', icon: <SupportAgentIcon /> },
 ];
 
 const bottomItems = [
@@ -49,8 +47,9 @@ const Sidebar = () => {
         color: '#2e3a25',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        p: 2,
+        justifyContent: 'space-between', 
+        py: 1,
+        px: 2,
         boxSizing: 'border-box',
         boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
         overflowY: 'auto',
@@ -61,18 +60,17 @@ const Sidebar = () => {
         sx={{
           height: 60,
           mb: 4,
-          bgcolor: '#4e5c47',
           borderRadius: 1,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'white',
+          color: '#4e5c47',
           fontWeight: 'bold',
           fontSize: '1.25rem',
           userSelect: 'none',
         }}
       >
-        Dream Star
+        SnapRoom
       </Box>
 
       {/* Menu Items */}
