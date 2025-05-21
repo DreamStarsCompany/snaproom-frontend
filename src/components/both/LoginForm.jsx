@@ -5,13 +5,14 @@ import {
   FormControlLabel,
   TextField,
   Typography,
-  Link,
   Paper,
   IconButton,
   InputAdornment,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState } from 'react';
+import { Link } from "react-router-dom";
+import { routes } from "../../routes";
 
 export default function LoginForm({ values, onChange, onSubmit }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +32,7 @@ export default function LoginForm({ values, onChange, onSubmit }) {
     >
       <Paper elevation={6} sx={{ width: 350, p: 4, borderRadius: 3 }}>
         <Typography variant="h5" align="center" fontWeight={600} gutterBottom>
-          Sign In Dream Star
+          Sign In SnapRoom
         </Typography>
         <Typography variant="body2" align="center" color="text.secondary" gutterBottom>
           Please enter your email and password to continue
@@ -81,7 +82,7 @@ export default function LoginForm({ values, onChange, onSubmit }) {
             }}
           />
 
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1, mb: 1 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1, mb: 1}}>
             <Link
               href="#"
               variant="body2"
@@ -123,8 +124,8 @@ export default function LoginForm({ values, onChange, onSubmit }) {
 
         <Typography variant="body2" align="center" mt={3}>
           Don’t have an account?{' '}
-          <Link
-            href="#"
+          <Link 
+            to={routes.register}
             underline="hover"
             sx={{ color: '#4e5c47', '&:hover': { color: '#3F5139' } }}
           >

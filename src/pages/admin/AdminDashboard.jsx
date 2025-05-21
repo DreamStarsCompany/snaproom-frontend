@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '../../components/admin/AdminSidebar';
 import Header from '../../components/admin/AdminHeader';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 export default function AdminDashboard() {
   return (
@@ -12,6 +12,9 @@ export default function AdminDashboard() {
         <Header />
 
         <Box sx={{ flexGrow: 1, bgcolor: '#f5f5f5', p: 2 }}>
+          <Typography variant='h4' sx={{ p: 2, fontWeight: '500'}} >
+            Dashboard
+          </Typography>
         </Box>
       </Box>
     </Box>

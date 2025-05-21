@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import Login from "../pages/both/Login";
 import AdminDashboard from "../pages/admin/AdminDashboard"
 import Dashboard from "../pages/partner/Dashboard"
+import Register from "../pages/partner/Register";
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -25,6 +26,7 @@ export default function appRoute() {
             <ScrollToTop />
             <Routes>
                 <Route path={routes.login} element={<Login />} />
+                <Route path={routes.register} element={<Register/>}/>
                 <Route path={routes.adminDashboard} element={<AdminDashboard />} />
                 <Route path={routes.partnerDashboard} element={<Dashboard />} />
             </Routes>

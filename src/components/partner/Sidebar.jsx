@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import WeekendIcon from '@mui/icons-material/Weekend';
 import BrushIcon from '@mui/icons-material/Brush';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ListAltIcon from '@mui/icons-material/ListAlt';
@@ -19,7 +19,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon /> },
-  { text: 'Products', icon: <ShoppingCartIcon /> },
+  { text: 'Furnitures', icon: <WeekendIcon /> },
   { text: 'Designs', icon: <BrushIcon /> },
   { text: 'Revenue', icon: <AttachMoneyIcon /> },
   { text: 'Order List', icon: <ListAltIcon /> },

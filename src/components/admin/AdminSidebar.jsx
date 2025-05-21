@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
+import { routes } from "../../routes";
 import {
   Box,
   List,
@@ -9,7 +11,7 @@ import {
 } from '@mui/material';
 
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import WeekendIcon from '@mui/icons-material/Weekend';
 import BrushIcon from '@mui/icons-material/Brush';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ListAltIcon from '@mui/icons-material/ListAlt';
@@ -19,18 +21,18 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const menuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon /> },
-  { text: 'Products', icon: <ShoppingCartIcon /> },
-  { text: 'Designs', icon: <BrushIcon /> },
-  { text: 'Revenue', icon: <AttachMoneyIcon /> },
-  { text: 'Order List', icon: <ListAltIcon /> },
-  { text: 'Support', icon: <SupportAgentIcon /> },
-  { text: 'Contact', icon: <ContactMailIcon /> },
+  { text: 'Dashboard', icon: <DashboardIcon />, route: 'adminDashboard' },
+  { text: 'Furnitures', icon: <WeekendIcon />, route: '#' },
+  { text: 'Designs', icon: <BrushIcon />, route: '#' },
+  { text: 'Revenue', icon: <AttachMoneyIcon />, route: '#' },
+  { text: 'Order List', icon: <ListAltIcon />, route: '#' },
+  { text: 'Support', icon: <SupportAgentIcon />, route: '#' },
+  { text: 'Contact', icon: <ContactMailIcon />, route: '#' },
 ];
 
 const bottomItems = [
-  { text: 'Settings', icon: <SettingsIcon /> },
-  { text: 'Logout', icon: <LogoutIcon /> },
+  { text: 'Settings', icon: <SettingsIcon />, route: '#' },
+  { text: 'Logout', icon: <LogoutIcon />, route: 'login' },
 ];
 
 const Sidebar = () => {
@@ -49,7 +51,7 @@ const Sidebar = () => {
         color: '#2e3a25',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between', 
+        justifyContent: 'space-between',
         py: 1,
         px: 2,
         boxSizing: 'border-box',
@@ -77,30 +79,32 @@ const Sidebar = () => {
 
       {/* Menu Items */}
       <List sx={{ flexGrow: 1 }}>
-        {menuItems.map(({ text, icon }) => (
-          <ListItemButton
-            key={text}
-            onClick={() => handleClick(text)}
-            sx={{
-              mb: 1,
-              borderRadius: 1,
-              bgcolor: activeItem === text ? '#3F5139' : 'transparent',
-              color: activeItem === text ? 'white' : '#2e3a25',
-              '&:hover': {
-                bgcolor: activeItem === text ? '#3F5139' : '#e0e0e0',
-              },
-            }}
-          >
-            <ListItemIcon
+        {menuItems.map(({ text, icon, route }) => (
+          <Link key={text} to={routes[route]} style={{ textDecoration: 'none'}}>
+            <ListItemButton
+              key={text}
+              onClick={() => handleClick(text)}
               sx={{
+                mb: 1,
+                borderRadius: 1,
+                bgcolor: activeItem === text ? '#3F5139' : 'transparent',
                 color: activeItem === text ? 'white' : '#2e3a25',
-                minWidth: '40px',
+                '&:hover': {
+                  bgcolor: activeItem === text ? '#3F5139' : '#e0e0e0',
+                },
               }}
             >
-              {icon}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItemButton>
+              <ListItemIcon
+                sx={{
+                  color: activeItem === text ? 'white' : '#2e3a25',
+                  minWidth: '40px',
+                }}
+              >
+                {icon}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </Link>
         ))}
       </List>
 
@@ -108,30 +112,33 @@ const Sidebar = () => {
 
       {/* Bottom Items */}
       <List>
-        {bottomItems.map(({ text, icon }) => (
-          <ListItemButton
-            key={text}
-            onClick={() => handleClick(text)}
-            sx={{
-              borderRadius: 1,
-              bgcolor: activeItem === text ? '#3F5139' : 'transparent',
-              color: activeItem === text ? 'white' : '#2e3a25',
-              '&:hover': {
-                bgcolor: activeItem === text ? '#3F5139' : '#e0e0e0',
-              },
-              mb: 1,
-            }}
-          >
-            <ListItemIcon
+        {bottomItems.map(({ text, icon, route }) => (
+          <Link key={text} to={routes[route]} style={{ textDecoration: 'none'}}>
+            <ListItemButton
+              key={text}
+              onClick={() => handleClick(text)}
               sx={{
+                textDecoration: 'none',
+                borderRadius: 1,
+                bgcolor: activeItem === text ? '#3F5139' : 'transparent',
                 color: activeItem === text ? 'white' : '#2e3a25',
-                minWidth: '40px',
+                '&:hover': {
+                  bgcolor: activeItem === text ? '#3F5139' : '#e0e0e0',
+                },
+                mb: 1,
               }}
             >
-              {icon}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItemButton>
+              <ListItemIcon
+                sx={{
+                  color: activeItem === text ? 'white' : '#2e3a25',
+                  minWidth: '40px',
+                }}
+              >
+                {icon}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </Link>
         ))}
       </List>
     </Box>
@@ -139,3 +146,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
