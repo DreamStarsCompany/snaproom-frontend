@@ -6,36 +6,46 @@ import {
   Typography,
   Button,
   Slide,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  useMediaQuery
 } from '@mui/material';
-// import landingBanner from '../../assets/image/landing_banner.png';
+import MenuIcon from '@mui/icons-material/Menu';
 import { routes } from "../../routes";
 import { Link } from "react-router-dom";
-
+import fullLogoWhite from '../../assets/image/full_logo_white.png';
+import logoWhite from '../../assets/image/logo_white.png';
+import landingBanner from '../../assets/image/landing_banner.png';
+import { useTheme } from '@mui/material/styles';
+import { motion } from 'framer-motion';
 
 const menuItems = [
   { label: 'Giới thiệu', target: 'section-0' },
   { label: 'Nội thất', target: 'section-1' },
-  { label: 'Bản vẽ', target: 'section-2' },
-  { label: 'Nhà thiết kế', target: 'section-3' },
-  { label: 'Liên Hệ', target: 'section-4' },
+  { label: 'Nhà thiết kế', target: 'section-2' },
+  { label: 'Liên Hệ', target: 'section-3' },
 ];
 
 const LandingHeader = () => {
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
       if (currentScrollY > lastScrollY) {
-        // Kéo xuống: ẩn header
         setShowHeader(false);
       } else if (currentScrollY < lastScrollY) {
-        // Kéo lên một chút: hiện lại
         setShowHeader(true);
       }
-
       setLastScrollY(currentScrollY);
     };
 
@@ -47,126 +57,179 @@ const LandingHeader = () => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      setDrawerOpen(false);
     }
   };
 
   return (
     <>
-      <Slide in={showHeader} direction="down">
+      <Slide in={showHeader} direction="down" timeout={{ enter: 500, exit: 300 }}>
         <AppBar
           position="sticky"
           sx={{
-            background: 'linear-gradient(to right, #3F5139, #3F5139)',
-            boxShadow: 'none',
+            background: '#3F5139',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
             zIndex: 1000,
           }}
         >
           <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              SnapRoom
-            </Typography>
-
-            <Box sx={{ display: 'flex', gap: 5 }}>
-              {menuItems.map((item) => (
-                <Typography
-                  key={item.label}
-                  onClick={() => handleScrollTo(item.target)}
-                  sx={{
-                    cursor: 'pointer',
-                    fontSize: '1.1rem',
-                    fontWeight: '500',
-                    transition: 'color 0.3s, text-decoration 0.3s',
-                    '&:hover': {
-                      color: '#A4C3A2',
-                      textDecoration: 'underline',
-                    },
-                  }}
-                >
-                  {item.label}
-                </Typography>
-              ))}
+            <Box sx={{ height: 64, display: 'flex', alignItems: 'center' }}>
+              <motion.img
+                src={logoWhite}
+                alt="SnapRoom Logo"
+                style={{ height: 90, width: 'auto' }}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6 }}
+              />
             </Box>
+
+            {isMobile ? (
+              <>
+                <IconButton edge="end" color="inherit" onClick={() => setDrawerOpen(true)}>
+                  <MenuIcon />
+                </IconButton>
+
+                <Drawer
+                  anchor="right"
+                  open={drawerOpen}
+                  onClose={() => setDrawerOpen(false)}
+                >
+                  <List sx={{ width: 250 }}>
+                    {menuItems.map((item) => (
+                      <ListItem key={item.label} disablePadding>
+                        <ListItemButton onClick={() => handleScrollTo(item.target)}>
+                          <ListItemText primary={item.label} />
+                        </ListItemButton>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Drawer>
+              </>
+            ) : (
+              <Box sx={{ display: 'flex', gap: 5 }}>
+                {menuItems.map((item) => (
+                  <Typography
+                    key={item.label}
+                    onClick={() => handleScrollTo(item.target)}
+                    sx={{
+                      cursor: 'pointer',
+                      fontSize: '1.1rem',
+                      fontWeight: '500',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        textDecoration: 'none',
+                        transform: 'translateY(-2px)',
+                      },
+                    }}
+                  >
+                    {item.label}
+                  </Typography>
+                ))}
+              </Box>
+            )}
           </Toolbar>
         </AppBar>
       </Slide>
 
+      {/* Hero Section */}
       <Box
         sx={{
-          // backgroundImage: `url(${landingBanner})`,
-          minHeight: '60vh',
+          position: 'relative',
+          backgroundImage: `url(${landingBanner})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+          minHeight: '80vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           padding: 4,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            zIndex: 1,
+          },
         }}
       >
-        <Box sx={{ maxWidth: 600, textAlign: 'center' }}>
-          <Box
-            sx={{
-              backgroundColor: '#3F5139',
-              padding: 3,
-              borderRadius: 2,
-              marginBottom: 3,
-            }}
-          >
-            <Typography
-              variant="h4"
-              sx={{ color: 'white', fontWeight: 'bold', mb: 1 }}
-            >
-              SnapRoom
-            </Typography>
-            <Typography sx={{ color: 'white', fontStyle: 'italic' }}>
-              Style Your Space, Your Way.
-            </Typography>
-          </Box>
-
-          <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
-            Lorem ipsum dolor sit amet
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 3 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
-            tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
-          </Typography>
-
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-            <Button
-              variant="contained"
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <Box sx={{ maxWidth: 600, textAlign: 'center', position: 'relative', zIndex: 2 }}>
+            <Box
               sx={{
-                minWidth: "15vh",
-                backgroundColor: '#3F5139',
-                color: 'white',
-                fontWeight: 'bold',
-                textTransform: 'none',
+                padding: 3,
                 borderRadius: 2,
-                px: 2,
-                '&:hover': {
-                  backgroundColor: '#2B3B27',
-                },
+                marginBottom: 3,
               }}
             >
-              Download
-            </Button>
-            <Link to={routes.register} style={{ textDecoration: 'none' }}>
+              <motion.img
+                src={fullLogoWhite}
+                alt="SnapRoom Logo"
+                style={{ maxWidth: '100%', height: 'auto' }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                whileHover={{ scale: 1.1 }}  // phóng to lên khi hover
+              />
+
+            </Box>
+
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
               <Button
                 variant="contained"
                 sx={{
                   minWidth: "15vh",
-                  backgroundColor: '#3F5139',
-                  color: 'white',
+                  backgroundColor: '#FFFFFF',
+                  color: '#3F5139',
                   fontWeight: 'bold',
                   textTransform: 'none',
                   borderRadius: 2,
                   px: 2,
+                  transition: 'all 0.3s ease',
                   '&:hover': {
-                    backgroundColor: '#2B3B27',
+                    backgroundColor: '#3F5139',
+                    color: 'white',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
                   },
                 }}
               >
-                Đăng ký
+                Download
               </Button>
-            </Link>
+              <Link to={routes.register} style={{ textDecoration: 'none' }}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    minWidth: "15vh",
+                    backgroundColor: '#FFFFFF',
+                    color: '#3F5139',
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                    borderRadius: 2,
+                    px: 2,
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      backgroundColor: '#3F5139',
+                      color: 'white',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+                    },
+                  }}
+                >
+                  Đăng ký
+                </Button>
+              </Link>
+            </Box>
           </Box>
-        </Box>
+        </motion.div>
       </Box>
     </>
   );
