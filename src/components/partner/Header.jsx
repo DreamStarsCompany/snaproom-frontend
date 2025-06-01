@@ -11,8 +11,10 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
   const [anchorElLang, setAnchorElLang] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -29,6 +31,10 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // 👈 Xóa token lưu trữ
+    navigate('/login'); // 👈 Chuyển hướng đến trang đăng nhập
+  };
   return (
     <Box
       sx={{
@@ -125,7 +131,12 @@ const Header = () => {
 
         <Menu anchorEl={anchorElUser} open={Boolean(anchorElUser)} onClose={handleClose}>
           <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem onClick={() => {
+            handleClose();   
+            handleLogout();   
+          }}>
+            Logout
+          </MenuItem>
         </Menu>
       </Box>
     </Box>
