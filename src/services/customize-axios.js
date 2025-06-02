@@ -25,12 +25,17 @@ instance.interceptors.response.use(
     return response.data ? response.data : { statusCode: response.status };
   },
   function (error) {
-    if (error.response && error.response.status === 401) {
-      localStorage.clear();
-      localStorage.setItem("sessionExpired", "true");
-      window.location.href = routes.login;
-    } else if (error.response) {
-      console.error("Response error:", error.response);
+    if (error.response) {
+      if (error.response.status === 401) {
+        // Nếu request là login thì không redirect
+        if (!error.config.url.includes('/api/auth/designer/login')) {
+          localStorage.clear();
+          localStorage.setItem("sessionExpired", "true");
+          window.location.href = routes.login;
+        }
+      } else {
+        console.error("Response error:", error.response);
+      }
     } else if (error.request) {
       console.error("Request error:", error.request);
       toast.error("Không thể kết nối đến server. Vui lòng thử lại sau");
@@ -41,5 +46,6 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 export default instance;

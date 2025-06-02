@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { routes } from "../../routes";
 import {
   Box,
@@ -19,11 +19,12 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import logoGreen from '../../assets/image/logo_green.png';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, route: 'adminDashboard' },
-  { text: 'Furnitures', icon: <WeekendIcon />, route: '#' },
-  { text: 'Designs', icon: <BrushIcon />, route: '#' },
+  { text: 'Furnitures', icon: <WeekendIcon />, route: 'adminFurniture' },
+  { text: 'Designs', icon: <BrushIcon />, route: 'adminDesign' },
   { text: 'Revenue', icon: <AttachMoneyIcon />, route: '#' },
   { text: 'Order List', icon: <ListAltIcon />, route: '#' },
   { text: 'Support', icon: <SupportAgentIcon />, route: '#' },
@@ -36,11 +37,8 @@ const bottomItems = [
 ];
 
 const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState('Dashboard');
-
-  const handleClick = (text) => {
-    setActiveItem(text);
-  };
+  const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -68,78 +66,98 @@ const Sidebar = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#4e5c47',
-          fontWeight: 'bold',
-          fontSize: '1.25rem',
-          userSelect: 'none',
         }}
       >
-        SnapRoom
+        <img
+          src={logoGreen}
+          alt="SnapRoom Logo"
+          style={{
+            maxHeight: '80%',
+            maxWidth: '80%',
+            objectFit: 'contain',
+          }}
+        />
       </Box>
 
       {/* Menu Items */}
       <List sx={{ flexGrow: 1 }}>
-        {menuItems.map(({ text, icon, route }) => (
-          <Link key={text} to={routes[route]} style={{ textDecoration: 'none'}}>
-            <ListItemButton
-              key={text}
-              onClick={() => handleClick(text)}
-              sx={{
-                mb: 1,
-                borderRadius: 1,
-                bgcolor: activeItem === text ? '#3F5139' : 'transparent',
-                color: activeItem === text ? 'white' : '#2e3a25',
-                '&:hover': {
-                  bgcolor: activeItem === text ? '#3F5139' : '#e0e0e0',
-                },
-              }}
-            >
-              <ListItemIcon
+        {menuItems.map(({ text, icon, route }) => {
+          const isActive = location.pathname === routes[route];
+          return (
+            <Link key={text} to={routes[route]} style={{ textDecoration: 'none' }}>
+              <ListItemButton
+                key={text}
+                onClick={() => {
+                  if (text === 'Logout') {
+                    localStorage.removeItem('token');
+                    navigate(routes.login);
+                  }
+                }}
                 sx={{
-                  color: activeItem === text ? 'white' : '#2e3a25',
-                  minWidth: '40px',
+                  mb: 1,
+                  borderRadius: 1,
+                  bgcolor: isActive ? '#3F5139' : 'transparent',
+                  color: isActive ? 'white' : '#2e3a25',
+                  '&:hover': {
+                    bgcolor: isActive ? '#3F5139' : '#e0e0e0',
+                  },
                 }}
               >
-                {icon}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </Link>
-        ))}
+                <ListItemIcon
+                  sx={{
+                    color: isActive ? 'white' : '#2e3a25',
+                    minWidth: '40px',
+                  }}
+                >
+                  {icon}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </Link>
+          );
+        })}
       </List>
 
       <Divider sx={{ my: 2 }} />
 
       {/* Bottom Items */}
       <List>
-        {bottomItems.map(({ text, icon, route }) => (
-          <Link key={text} to={routes[route]} style={{ textDecoration: 'none'}}>
-            <ListItemButton
-              key={text}
-              onClick={() => handleClick(text)}
-              sx={{
-                textDecoration: 'none',
-                borderRadius: 1,
-                bgcolor: activeItem === text ? '#3F5139' : 'transparent',
-                color: activeItem === text ? 'white' : '#2e3a25',
-                '&:hover': {
-                  bgcolor: activeItem === text ? '#3F5139' : '#e0e0e0',
-                },
-                mb: 1,
-              }}
-            >
-              <ListItemIcon
+        {bottomItems.map(({ text, icon, route }) => {
+          const isActive = location.pathname === routes[route];
+          return (
+            <Link key={text} to={routes[route]} style={{ textDecoration: 'none' }}>
+              <ListItemButton
+                key={text}
+                onClick={() => {
+                  if (text === 'Logout') {
+                    localStorage.removeItem('token');
+                    navigate(routes.login);
+                  }
+                }}
                 sx={{
-                  color: activeItem === text ? 'white' : '#2e3a25',
-                  minWidth: '40px',
+                  textDecoration: 'none',
+                  borderRadius: 1,
+                  bgcolor: isActive ? '#3F5139' : 'transparent',
+                  color: isActive ? 'white' : '#2e3a25',
+                  '&:hover': {
+                    bgcolor: isActive ? '#3F5139' : '#e0e0e0',
+                  },
+                  mb: 1,
                 }}
               >
-                {icon}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </Link>
-        ))}
+                <ListItemIcon
+                  sx={{
+                    color: isActive ? 'white' : '#2e3a25',
+                    minWidth: '40px',
+                  }}
+                >
+                  {icon}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </Link>
+          );
+        })}
       </List>
     </Box>
   );

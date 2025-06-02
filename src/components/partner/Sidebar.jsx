@@ -16,6 +16,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import logoGreen from '../../assets/image/logo_green.png';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon /> },
@@ -47,7 +48,7 @@ const Sidebar = () => {
         color: '#2e3a25',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between', 
+        justifyContent: 'space-between',
         py: 1,
         px: 2,
         boxSizing: 'border-box',
@@ -64,13 +65,17 @@ const Sidebar = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#4e5c47',
-          fontWeight: 'bold',
-          fontSize: '1.25rem',
-          userSelect: 'none',
         }}
       >
-        SnapRoom
+        <img
+          src={logoGreen}
+          alt="SnapRoom Logo"
+          style={{
+            maxHeight: '80%',
+            maxWidth: '80%',
+            objectFit: 'contain',
+          }}
+        />
       </Box>
 
       {/* Menu Items */}
