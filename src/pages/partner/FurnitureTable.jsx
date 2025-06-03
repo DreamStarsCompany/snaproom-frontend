@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import Sidebar from '../../components/admin/AdminSidebar';
-import Header from '../../components/admin/AdminHeader';
+import Sidebar from '../../components/partner/Sidebar';
+import Header from '../../components/partner/Header';
 import { Box, Typography, InputBase } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import FurnitureTable from '../../components/admin/FurnitureTable';
+import FurList from '../../components/partner/FurList';
 
-export default function AdminFurniture() {
+export default function FurnitureTable() {
   const location = useLocation();
   useEffect(() => {
     if (location.state?.toastMessage) {
@@ -45,6 +45,7 @@ export default function AdminFurniture() {
               <SearchIcon sx={{ color: 'gray', mr: 1 }} />
               <InputBase
                 placeholder="Search furniture name"
+                variant="standard" // thêm dòng này
                 sx={{
                   flex: 1,
                   color: 'gray',
@@ -56,7 +57,6 @@ export default function AdminFurniture() {
                     outline: 'none',
                   },
                 }}
-                disableUnderline
               />
             </Box>
           </Box>
@@ -68,9 +68,8 @@ export default function AdminFurniture() {
               overflowY: 'auto',
             }}
           >
-            <FurnitureTable />
+            <FurList />
           </Box>
-
         </Box>
       </Box>
     </Box>

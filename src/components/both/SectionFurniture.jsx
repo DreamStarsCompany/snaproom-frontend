@@ -34,15 +34,15 @@ const SectionFurniture = () => {
 
     const settingsNormal = {
         vertical: true,
-        verticalSwiping: true,
+        verticalSwiping: false,
         slidesToShow: 3,
         slidesToScroll: 1,
         infinite: true,
-        speed: 800,
-        cssEase: 'ease-in-out',
+        speed: 3000,
+        cssEase: 'linear',
         arrows: false,
         autoplay: true,
-        autoplaySpeed: 3000,
+        autoplaySpeed: 0,
         pauseOnHover: true,
     };
 

@@ -32,13 +32,13 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // 👈 Xóa token lưu trữ
-    navigate('/login'); // 👈 Chuyển hướng đến trang đăng nhập
+    localStorage.removeItem('token'); 
+    navigate('/login'); 
   };
   return (
     <Box
       sx={{
-        height: 70,
+        minHeight: 70,
         bgcolor: '#fff',
         py: 1,
         px: 3,
@@ -120,7 +120,7 @@ const Header = () => {
           <Avatar alt="User" src="https://i.pravatar.cc/150?img=3" />
           <Box sx={{ textAlign: 'left' }}>
             <Typography variant="body2" fontWeight="bold">
-              Quỳnh Như
+              Lê Trí
             </Typography>
             <Typography variant="caption" color="text.secondary">
               Designer

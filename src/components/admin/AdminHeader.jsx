@@ -38,7 +38,7 @@ const Header = () => {
   return (
     <Box
       sx={{
-        height: 70,
+        minHeight: 70,
         bgcolor: '#fff',
         py: 1,
         px: 3,
@@ -120,7 +120,7 @@ const Header = () => {
           <Avatar alt="User" src="https://i.pravatar.cc/150?img=3" />
           <Box sx={{ textAlign: 'left' }}>
             <Typography variant="body2" fontWeight="bold">
-              Lê Trí
+              Quỳnh Như
             </Typography>
             <Typography variant="caption" color="text.secondary">
               Admin

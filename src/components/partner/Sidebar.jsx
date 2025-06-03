@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { routes } from "../../routes";
 import {
   Box,
   List,
@@ -19,24 +21,26 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import logoGreen from '../../assets/image/logo_green.png';
 
 const menuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon /> },
-  { text: 'Furnitures', icon: <WeekendIcon /> },
-  { text: 'Designs', icon: <BrushIcon /> },
-  { text: 'Revenue', icon: <AttachMoneyIcon /> },
-  { text: 'Order List', icon: <ListAltIcon /> },
-  { text: 'Chat', icon: <SupportAgentIcon /> },
+  { text: 'Dashboard', icon: <DashboardIcon />, route: 'partnerDashboard' },
+  { text: 'Furnitures', icon: <WeekendIcon />, route:'furList' },
+  { text: 'Designs', icon: <BrushIcon />, route: 'designList' },
+  { text: 'Revenue', icon: <AttachMoneyIcon />, route: '#' },
+  { text: 'Order List', icon: <ListAltIcon />, route: 'orderList' },
+  { text: 'Chat', icon: <SupportAgentIcon />, route: '#' },
 ];
 
 const bottomItems = [
-  { text: 'Settings', icon: <SettingsIcon /> },
-  { text: 'Logout', icon: <LogoutIcon /> },
+  { text: 'Settings', icon: <SettingsIcon />, route: '#' },
+  { text: 'Logout', icon: <LogoutIcon />, route: 'login' },
 ];
 
 const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState('Dashboard');
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleClick = (text) => {
-    setActiveItem(text);
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate(routes.login);
   };
 
   return (
@@ -80,62 +84,96 @@ const Sidebar = () => {
 
       {/* Menu Items */}
       <List sx={{ flexGrow: 1 }}>
-        {menuItems.map(({ text, icon }) => (
-          <ListItemButton
-            key={text}
-            onClick={() => handleClick(text)}
-            sx={{
-              mb: 1,
-              borderRadius: 1,
-              bgcolor: activeItem === text ? '#3F5139' : 'transparent',
-              color: activeItem === text ? 'white' : '#2e3a25',
-              '&:hover': {
-                bgcolor: activeItem === text ? '#3F5139' : '#e0e0e0',
-              },
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                color: activeItem === text ? 'white' : '#2e3a25',
-                minWidth: '40px',
-              }}
-            >
-              {icon}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItemButton>
-        ))}
+        {menuItems.map(({ text, icon, route }) => {
+          const path = routes[route] || '#';
+          const isActive = location.pathname === path;
+
+          return (
+            <Link key={text} to={path} style={{ textDecoration: 'none' }}>
+              <ListItemButton
+                sx={{
+                  mb: 1,
+                  borderRadius: 1,
+                  bgcolor: isActive ? '#3F5139' : 'transparent',
+                  color: isActive ? 'white' : '#2e3a25',
+                  '&:hover': {
+                    bgcolor: isActive ? '#3F5139' : '#e0e0e0',
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    color: isActive ? 'white' : '#2e3a25',
+                    minWidth: '40px',
+                  }}
+                >
+                  {icon}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </Link>
+          );
+        })}
       </List>
 
       <Divider sx={{ my: 2 }} />
 
       {/* Bottom Items */}
       <List>
-        {bottomItems.map(({ text, icon }) => (
-          <ListItemButton
-            key={text}
-            onClick={() => handleClick(text)}
-            sx={{
-              borderRadius: 1,
-              bgcolor: activeItem === text ? '#3F5139' : 'transparent',
-              color: activeItem === text ? 'white' : '#2e3a25',
-              '&:hover': {
-                bgcolor: activeItem === text ? '#3F5139' : '#e0e0e0',
-              },
-              mb: 1,
-            }}
-          >
-            <ListItemIcon
+        {bottomItems.map(({ text, icon, route }) => {
+          const path = routes[route] || '#';
+          const isActive = location.pathname === path;
+
+          return text === 'Logout' ? (
+            <ListItemButton
+              key={text}
+              onClick={handleLogout}
               sx={{
-                color: activeItem === text ? 'white' : '#2e3a25',
-                minWidth: '40px',
+                borderRadius: 1,
+                bgcolor: isActive ? '#3F5139' : 'transparent',
+                color: isActive ? 'white' : '#2e3a25',
+                '&:hover': {
+                  bgcolor: isActive ? '#3F5139' : '#e0e0e0',
+                },
+                mb: 1,
               }}
             >
-              {icon}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItemButton>
-        ))}
+              <ListItemIcon
+                sx={{
+                  color: isActive ? 'white' : '#2e3a25',
+                  minWidth: '40px',
+                }}
+              >
+                {icon}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          ) : (
+            <Link key={text} to={path} style={{ textDecoration: 'none' }}>
+              <ListItemButton
+                sx={{
+                  borderRadius: 1,
+                  bgcolor: isActive ? '#3F5139' : 'transparent',
+                  color: isActive ? 'white' : '#2e3a25',
+                  '&:hover': {
+                    bgcolor: isActive ? '#3F5139' : '#e0e0e0',
+                  },
+                  mb: 1,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    color: isActive ? 'white' : '#2e3a25',
+                    minWidth: '40px',
+                  }}
+                >
+                  {icon}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </Link>
+          );
+        })}
       </List>
     </Box>
   );

@@ -26,7 +26,7 @@ const menuItems = [
   { text: 'Furnitures', icon: <WeekendIcon />, route: 'adminFurniture' },
   { text: 'Designs', icon: <BrushIcon />, route: 'adminDesign' },
   { text: 'Revenue', icon: <AttachMoneyIcon />, route: '#' },
-  { text: 'Order List', icon: <ListAltIcon />, route: '#' },
+  { text: 'Order List', icon: <ListAltIcon />, route: 'adminOrder' },
   { text: 'Support', icon: <SupportAgentIcon />, route: '#' },
   { text: 'Contact', icon: <ContactMailIcon />, route: '#' },
 ];

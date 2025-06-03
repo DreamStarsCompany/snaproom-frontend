@@ -20,7 +20,9 @@ export default function AdminDesign() {
       <Sidebar />
 
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        <Header />
+        <Box sx={{ flexShrink: 0, minHeight: 64 }}>
+          <Header />
+        </Box>
 
         <Box sx={{ flexGrow: 1, bgcolor: '#f5f5f5', p: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 2 }}>
@@ -42,7 +44,7 @@ export default function AdminDesign() {
             >
               <SearchIcon sx={{ color: 'gray', mr: 1 }} />
               <InputBase
-                placeholder="Search product name"
+                placeholder="Search design name"
                 sx={{
                   flex: 1,
                   color: 'gray',
@@ -58,8 +60,17 @@ export default function AdminDesign() {
               />
             </Box>
           </Box>
+          <Box
+            sx={{
+              flexGrow: 1,
+              bgcolor: '#f5f5f5',
+              p: 2,
+              overflowY: 'auto',
+            }}
+          >
+            <DesignTable />
+          </Box>
 
-          <DesignTable />
         </Box>
       </Box>
     </Box>
