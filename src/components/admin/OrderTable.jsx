@@ -57,6 +57,7 @@ const OrderTable = () => {
                             <TableCell sx={{ color: '#f5f5f5' }}>STT</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Mã đơn hàng</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Nhà thiết kế</TableCell>
+                            <TableCell sx={{ color: '#f5f5f5' }}>Người mua</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Tổng giá</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Ngày tạo</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Trạng thái</TableCell>
@@ -73,6 +74,7 @@ const OrderTable = () => {
                                 <TableCell>{(page - 1) * pageSize + index + 1}</TableCell>
                                 <TableCell>{item.id}</TableCell>
                                 <TableCell>{item.designer.name}</TableCell>
+                                <TableCell>{item.customer.name}</TableCell>
                                 <TableCell>{item.orderPrice.toLocaleString()}đ</TableCell>
                                 <TableCell>{formatDate(item.date)}</TableCell>
                                 <TableCell>

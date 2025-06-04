@@ -13,7 +13,6 @@ import {
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import WeekendIcon from '@mui/icons-material/Weekend';
 import BrushIcon from '@mui/icons-material/Brush';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
@@ -22,18 +21,17 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import logoGreen from '../../assets/image/logo_green.png';
 
 const menuItems = [
-  { text: 'Dashboard', icon: <DashboardIcon />, route: 'adminDashboard' },
-  { text: 'Furnitures', icon: <WeekendIcon />, route: 'adminFurniture' },
-  { text: 'Designs', icon: <BrushIcon />, route: 'adminDesign' },
-  { text: 'Revenue', icon: <AttachMoneyIcon />, route: '#' },
-  { text: 'Order List', icon: <ListAltIcon />, route: 'adminOrder' },
-  { text: 'Support', icon: <SupportAgentIcon />, route: '#' },
-  { text: 'Contact', icon: <ContactMailIcon />, route: '#' },
+  { text: 'Thống kê', icon: <DashboardIcon />, route: 'adminDashboard' },
+  { text: 'Nội thất', icon: <WeekendIcon />, route: 'adminFurniture' },
+  { text: 'Thiết kế', icon: <BrushIcon />, route: 'adminDesign' },
+  { text: 'Đơn hàng', icon: <ListAltIcon />, route: 'adminOrder' },
+  { text: 'Hỗ trợ', icon: <SupportAgentIcon />, route: '#' },
+  { text: 'Trò chuyện', icon: <ContactMailIcon />, route: '#' },
 ];
 
 const bottomItems = [
-  { text: 'Settings', icon: <SettingsIcon />, route: '#' },
-  { text: 'Logout', icon: <LogoutIcon />, route: 'login' },
+  { text: 'Cài đặt', icon: <SettingsIcon />, route: '#' },
+  { text: 'Đăng xuất', icon: <LogoutIcon />, route: 'login' },
 ];
 
 const Sidebar = () => {

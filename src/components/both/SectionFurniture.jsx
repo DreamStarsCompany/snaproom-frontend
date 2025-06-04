@@ -1,6 +1,6 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 
 import fur_section from '../../assets/image/fur_section.png';
@@ -222,31 +222,19 @@ const SectionFurniture = () => {
                     px: { xs: 0, md: 3 },
                 }}
             >
-                <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+                <Typography
+                    variant={'h2'}
+                    sx={{ fontWeight: 'bold', mb: 1, letterSpacing: 1 }}
+                >
                     Nội thất
                 </Typography>
-                <Typography variant="body1" sx={{ lineHeight: 1.6 }}>
+                <Typography
+                    variant="subtitle1"
+                    sx={{ mb: 3, fontWeight: 500, color: '#f5f5f5', letterSpacing: 0.8 }}
+                >
                     Khám phá những thiết kế nội thất hiện đại, tiện nghi và thẩm mỹ cao,
                     biến không gian sống của bạn trở nên sang trọng và đầy cảm hứng.
                 </Typography>
-                <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: '#fff',
-                        color: '#3F5139',
-                        fontWeight: 'bold',
-                        textTransform: 'none',
-                        borderRadius: 2,
-                        mt: 5,
-                        px: 3,
-                        py: 1.5,
-                        '&:hover': {
-                            backgroundColor: '#e6e6e6',
-                        },
-                    }}
-                >
-                    Khám phá ngay
-                </Button>
             </Box>
         </Box>
     );

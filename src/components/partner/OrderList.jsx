@@ -55,7 +55,7 @@ const OrderList = () => {
                     <TableHead sx={{ backgroundColor: '#3F5139' }}>
                         <TableRow>
                             <TableCell sx={{ color: '#f5f5f5' }}>STT</TableCell>
-                            <TableCell sx={{ color: '#f5f5f5' }}>Mã đơn hàng</TableCell>
+                            <TableCell sx={{ color: '#f5f5f5' }}>Người mua</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Tổng giá</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Ngày tạo</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Trạng thái</TableCell>
@@ -70,7 +70,7 @@ const OrderList = () => {
                                 sx={{ cursor: 'pointer' }}
                             >
                                 <TableCell>{(page - 1) * pageSize + index + 1}</TableCell>
-                                <TableCell>{item.id}</TableCell>
+                                <TableCell>{item.customer.name}</TableCell>
                                 <TableCell>{item.orderPrice.toLocaleString()}đ</TableCell>
                                 <TableCell>{formatDate(item.date)}</TableCell>
                                 <TableCell>

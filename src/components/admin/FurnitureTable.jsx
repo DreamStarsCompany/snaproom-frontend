@@ -8,7 +8,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Avatar,
   IconButton,
   Pagination,
 } from '@mui/material';
@@ -16,25 +15,40 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getAllFurnituresAPI } from '../../services/UsersSevices';
 
-const FurnitureTable = () => {
-  const [furnitures, setFurnitures] = useState([]);
+const FurnitureTable = ({ searchTerm }) => {
+  const [allFurnitures, setAllFurnitures] = useState([]);
+  const [filteredFurnitures, setFilteredFurnitures] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(6); // Số item mỗi trang
-  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 6;
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await getAllFurnituresAPI(page, pageSize);
-      setFurnitures(res.data.items || []);
-      setTotalPages(res.data.totalPages || 1);
-    } catch (err) {
-      console.error('Error fetching furnitures:', err);
-    }
-  };
+    const fetchData = async () => {
+      try {
+        const res = await getAllFurnituresAPI(); // Không phân trang ở API
+        const items = res.data.items || [];
+        setAllFurnitures(items);
+        setFilteredFurnitures(items);
+      } catch (err) {
+        console.error('Error fetching furnitures:', err);
+      }
+    };
 
-  fetchData();
-}, [page, pageSize]);
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const filtered = allFurnitures.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredFurnitures(filtered);
+    setPage(1); // Reset về trang 1 khi search
+  }, [searchTerm, allFurnitures]);
+
+  const totalPages = Math.ceil(filteredFurnitures.length / pageSize);
+  const paginatedFurnitures = filteredFurnitures.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
 
   const handleChangePage = (event, value) => {
     setPage(value);
@@ -54,17 +68,24 @@ const FurnitureTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {furnitures.map((item, index) => (
+            {paginatedFurnitures.map((item, index) => (
               <TableRow key={item.id}>
                 <TableCell>{(page - 1) * pageSize + index + 1}</TableCell>
                 <TableCell>
-                  <Avatar
-                    variant="rounded"
-                    src={item.image?.imageSource || ''}
+                  <Box
+                    component="img"
+                    src={item?.primaryImage?.imageSource || 'img'}
                     alt={item.name}
-                    sx={{ width: 56, height: 56 }}
+                    sx={{
+                      width: 60,
+                      height: 60,
+                      objectFit: 'cover',
+                      borderRadius: 1,
+                      display: 'block',
+                    }}
                   />
                 </TableCell>
+
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.price.toLocaleString()}đ</TableCell>
                 <TableCell align="center">

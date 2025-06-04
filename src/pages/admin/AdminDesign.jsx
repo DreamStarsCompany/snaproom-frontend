@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import Sidebar from '../../components/admin/AdminSidebar';
 import Header from '../../components/admin/AdminHeader';
@@ -9,6 +9,7 @@ import DesignTable from '../../components/admin/DesignTable';
 
 export default function AdminDesign() {
   const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState('');
   useEffect(() => {
     if (location.state?.toastMessage) {
       toast.success(location.state.toastMessage);
@@ -25,9 +26,9 @@ export default function AdminDesign() {
         </Box>
 
         <Box sx={{ flexGrow: 1, bgcolor: '#f5f5f5', p: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 2 }}>
-            <Typography variant='h4' sx={{ fontWeight: 600 }}>
-              Designs
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 2, mt:2 }}>
+            <Typography variant='h4' sx={{ fontWeight: 500 }}>
+              Bản thiết kế
             </Typography>
 
             <Box
@@ -44,7 +45,9 @@ export default function AdminDesign() {
             >
               <SearchIcon sx={{ color: 'gray', mr: 1 }} />
               <InputBase
-                placeholder="Search design name"
+                placeholder="Tên bản thiết kế..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 sx={{
                   flex: 1,
                   color: 'gray',
@@ -68,7 +71,7 @@ export default function AdminDesign() {
               overflowY: 'auto',
             }}
           >
-            <DesignTable />
+            <DesignTable searchTerm={searchTerm} />
           </Box>
 
         </Box>

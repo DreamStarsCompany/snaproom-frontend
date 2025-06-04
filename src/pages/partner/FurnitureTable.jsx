@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import Sidebar from '../../components/partner/Sidebar';
 import Header from '../../components/partner/Header';
@@ -9,6 +9,8 @@ import FurList from '../../components/partner/FurList';
 
 export default function FurnitureTable() {
   const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState('');
+
   useEffect(() => {
     if (location.state?.toastMessage) {
       toast.success(location.state.toastMessage);
@@ -25,9 +27,9 @@ export default function FurnitureTable() {
         </Box>
 
         <Box sx={{ flexGrow: 1, bgcolor: '#f5f5f5', p: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 2 }}>
-            <Typography variant='h4' sx={{ fontWeight: 600 }}>
-              Furnitures
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 2, mt:2}}>
+            <Typography variant='h4' sx={{ fontWeight: 500 }}>
+              Nội thất
             </Typography>
 
             <Box
@@ -44,8 +46,10 @@ export default function FurnitureTable() {
             >
               <SearchIcon sx={{ color: 'gray', mr: 1 }} />
               <InputBase
-                placeholder="Search furniture name"
+                placeholder="Tên nội thất..."
                 variant="standard" // thêm dòng này
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 sx={{
                   flex: 1,
                   color: 'gray',
@@ -68,7 +72,7 @@ export default function FurnitureTable() {
               overflowY: 'auto',
             }}
           >
-            <FurList />
+            <FurList searchTerm={searchTerm}/>
           </Box>
         </Box>
       </Box>

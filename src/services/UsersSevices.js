@@ -16,6 +16,23 @@ const loginDesignerAPI = async (email, password) => {
   }
 };
 
+const registerDesignerAPI = async (name, email, password, applicationUrl) => {
+  try {
+    const response = await instance.post('/api/auth/designer/register', {
+      name,
+      email,
+      password,
+      applicationUrl: applicationUrl, 
+    });
+    console.log('Register success:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Register error:', error);
+    throw error;
+  }
+};
+
+
 // =============Furniture============
 const getAllFurnituresAPI = async (pageNumber = -1, pageSize = -1) => {
   try {
@@ -131,5 +148,6 @@ export {
   getAllFursByDesAPI,
   getAllOrdersByDesAPI,
   getOrdersById,
-  getAllOrdersAPI
+  getAllOrdersAPI,
+  registerDesignerAPI
 };

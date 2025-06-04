@@ -8,7 +8,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Avatar,
   IconButton,
   Pagination,
 } from '@mui/material';
@@ -16,25 +15,40 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getAllDesignsAPI } from '../../services/UsersSevices';
 
-const DesignTable = () => {
-  const [designs, setDesigns] = useState([]);
+const DesignTable = ({ searchTerm }) => {
+  const [allDesigns, setAllDesigns] = useState([]);
+  const [filteredDesigns, setFilteredDesigns] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(6); // Số item mỗi trang
-  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 6;
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await getAllDesignsAPI(page, pageSize);
-      setDesigns(res.data.items || []);
-      setTotalPages(res.data.totalPages || 1);
-    } catch (err) {
-      console.error('Error fetching designs:', err);
-    }
-  };
+    const fetchData = async () => {
+      try {
+        const res = await getAllDesignsAPI(); // lấy tất cả dữ liệu
+        const items = res.data.items || [];
+        setAllDesigns(items);
+        setFilteredDesigns(items); // ban đầu chưa search
+      } catch (err) {
+        console.error('Error fetching designs:', err);
+      }
+    };
 
-  fetchData();
-}, [page, pageSize]);
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const filtered = allDesigns.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredDesigns(filtered);
+    setPage(1); // reset về trang 1 khi tìm kiếm
+  }, [searchTerm, allDesigns]);
+
+  const totalPages = Math.ceil(filteredDesigns.length / pageSize);
+  const paginatedDesigns = filteredDesigns.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
 
   const handleChangePage = (event, value) => {
     setPage(value);
@@ -54,15 +68,21 @@ const DesignTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {designs.map((item, index) => (
+            {paginatedDesigns.map((item, index) => (
               <TableRow key={item.id}>
                 <TableCell>{(page - 1) * pageSize + index + 1}</TableCell>
                 <TableCell>
-                  <Avatar
-                    variant="rounded"
-                    src={item.image?.imageSource || ''}
+                  <Box
+                    component="img"
+                    src={item?.primaryImage?.imageSource || 'img'}
                     alt={item.name}
-                    sx={{ width: 56, height: 56 }}
+                    sx={{
+                      width: 130,
+                      height: 80,
+                      objectFit: 'cover',
+                      borderRadius: 1,
+                      display: 'block',
+                    }}
                   />
                 </TableCell>
                 <TableCell>{item.name}</TableCell>

@@ -25,9 +25,9 @@ export default function AdminOrder() {
                 </Box>
 
                 <Box sx={{ flexGrow: 1, bgcolor: '#f5f5f5', p: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 2 }}>
-                        <Typography variant='h4' sx={{ fontWeight: 600 }}>
-                            Orders
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 2, mt:2 }}>
+                        <Typography variant='h4' sx={{ fontWeight: 500 }}>
+                            Đơn hàng
                         </Typography>
 
                         <Box
@@ -44,7 +44,7 @@ export default function AdminOrder() {
                         >
                             <SearchIcon sx={{ color: 'gray', mr: 1 }} />
                             <InputBase
-                                placeholder="Search order code"
+                                placeholder="Mã đơn hàng"
                                 variant="standard" // thêm dòng này
                                 sx={{
                                     flex: 1,

@@ -74,7 +74,6 @@ const OrderDetail = ({ orderId }) => {
 
             <Paper sx={{ p: 3, mb: 3 }}>
                 <Typography variant="subtitle1">👤 Khách hàng: {order.customer?.name || 'N/A'}</Typography>
-                <Typography variant="subtitle1">🎨 Nhà thiết kế: {order.designer?.name || 'N/A'}</Typography>
                 <Typography variant="subtitle1">
                     💰 Tổng giá: {order.orderPrice?.toLocaleString() || 0}đ
                 </Typography>

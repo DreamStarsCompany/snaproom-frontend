@@ -203,9 +203,9 @@ const LandingHeader = () => {
                   },
                 }}
               >
-                Download
+                Tải app
               </Button>
-              <Link to={routes.register} style={{ textDecoration: 'none' }}>
+              <Link to={routes.login} style={{ textDecoration: 'none' }}>
                 <Button
                   variant="contained"
                   sx={{
@@ -224,7 +224,7 @@ const LandingHeader = () => {
                     },
                   }}
                 >
-                  Đăng ký
+                  Đăng nhập
                 </Button>
               </Link>
             </Box>

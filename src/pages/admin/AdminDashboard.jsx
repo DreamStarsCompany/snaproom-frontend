@@ -22,7 +22,7 @@ const location = useLocation();
 
         <Box sx={{ flexGrow: 1, bgcolor: '#f5f5f5', p: 2 }}>
           <Typography variant='h4' sx={{ p: 2, fontWeight: '600'}} >
-            Dashboard
+            Thống kê
           </Typography>
         </Box>
       </Box>

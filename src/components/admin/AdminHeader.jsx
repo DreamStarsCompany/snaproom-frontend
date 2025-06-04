@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   InputBase,
@@ -12,20 +12,17 @@ import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const Header = () => {
   const navigate = useNavigate();
   const [anchorElLang, setAnchorElLang] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [name, setName] = useState('Người dùng');
+  const [role, setRole] = useState('');
 
-  const handleLangClick = (event) => {
-    setAnchorElLang(event.currentTarget);
-  };
-
-  const handleUserClick = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
+  const handleLangClick = (event) => setAnchorElLang(event.currentTarget);
+  const handleUserClick = (event) => setAnchorElUser(event.currentTarget);
   const handleClose = () => {
     setAnchorElLang(null);
     setAnchorElUser(null);
@@ -35,6 +32,24 @@ const Header = () => {
     localStorage.removeItem('token');
     navigate('/login');
   };
+
+  useEffect(() => {
+  const token = localStorage.getItem('token');
+  console.log('TOKEN:', token); 
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      console.log('DECODED:', decoded);
+      setName(decoded?.Name || 'Người dùng');
+      setRole(decoded?.Role || '')
+    } catch (error) {
+      console.error('Lỗi giải mã token:', error);
+    }
+  }
+}, []);
+
+
   return (
     <Box
       sx={{
@@ -59,23 +74,21 @@ const Header = () => {
           py: 0.5,
           borderRadius: 2,
           width: 300,
-          '&:hover': {
-            bgcolor: '#e0e0e0',
-          },
+          '&:hover': { bgcolor: '#e0e0e0' },
         }}
       >
         <SearchIcon sx={{ mr: 1, color: '#2e3a25' }} />
-        <InputBase placeholder="Search..." fullWidth sx={{ color: '#2e3a25' }} />
+        <InputBase placeholder="Tìm kiếm..." fullWidth sx={{ color: '#2e3a25' }} />
       </Box>
 
-      {/* Right Side */}
+      {/* Right Section */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-        {/* Notification Icon */}
+        {/* Notifications */}
         <IconButton sx={{ color: '#2e3a25' }}>
           <NotificationsIcon />
         </IconButton>
 
-        {/* Language Selector */}
+        {/* Language Menu */}
         <Box
           onClick={handleLangClick}
           sx={{
@@ -120,22 +133,24 @@ const Header = () => {
           <Avatar alt="User" src="https://i.pravatar.cc/150?img=3" />
           <Box sx={{ textAlign: 'left' }}>
             <Typography variant="body2" fontWeight="bold">
-              Quỳnh Như
+              {name}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Admin
+              {role}
             </Typography>
           </Box>
           <ArrowDropDownIcon />
         </Box>
 
         <Menu anchorEl={anchorElUser} open={Boolean(anchorElUser)} onClose={handleClose}>
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={() => {
-            handleClose();
-            handleLogout();
-          }}>
-            Logout
+          <MenuItem onClick={handleClose}>Hồ sơ</MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              handleLogout();
+            }}
+          >
+            Đăng xuất
           </MenuItem>
         </Menu>
       </Box>
