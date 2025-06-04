@@ -77,9 +77,9 @@ const FurnitureTable = ({ searchTerm }) => {
                     src={item?.primaryImage?.imageSource || 'img'}
                     alt={item.name}
                     sx={{
-                      width: 60,
-                      height: 60,
-                      objectFit: 'cover',
+                      width: 70,
+                      height: 70,
+                      objectFit: 'contain',
                       borderRadius: 1,
                       display: 'block',
                     }}

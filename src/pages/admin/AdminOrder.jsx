@@ -24,7 +24,10 @@ export default function AdminOrder() {
                     <Header />
                 </Box>
 
-                <Box sx={{ flexGrow: 1, bgcolor: '#f5f5f5', p: 2 }}>
+                <Box sx={{ lexGrow: 1,
+              bgcolor: '#f5f5f5',
+              p: 2,
+              overflowY: 'auto', }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 2, mt:2 }}>
                         <Typography variant='h4' sx={{ fontWeight: 500 }}>
                             Đơn hàng

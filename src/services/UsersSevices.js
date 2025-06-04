@@ -32,6 +32,26 @@ const registerDesignerAPI = async (name, email, password, applicationUrl) => {
   }
 };
 
+const applicationResultAPI = async (email, isApproved) => {
+  try {
+    const response = await instance.post(
+      `/api/auth/application-result`,
+      {}, // Request body rỗng
+      {
+        params: {
+          email: email,
+          isApproved: isApproved,
+        },
+      }
+    );
+    console.log('Application result submitted:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Application result error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 
 // =============Furniture============
 const getAllFurnituresAPI = async (pageNumber = -1, pageSize = -1) => {
@@ -149,5 +169,6 @@ export {
   getAllOrdersByDesAPI,
   getOrdersById,
   getAllOrdersAPI,
-  registerDesignerAPI
+  registerDesignerAPI,
+  applicationResultAPI
 };

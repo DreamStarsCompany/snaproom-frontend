@@ -20,7 +20,10 @@ export default function Dashboard() {
 
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <Header />
-        <Box sx={{ flexGrow: 1, bgcolor: '#f5f5f5', p: 2 }}>
+        <Box sx={{ lexGrow: 1,
+              bgcolor: '#f5f5f5',
+              p: 2,
+              overflowY: 'auto', }}>
           <Typography variant='h4' sx={{ p: 2, fontWeight: '500' }} >
             Thống kê
           </Typography>
