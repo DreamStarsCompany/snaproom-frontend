@@ -64,6 +64,43 @@ const SectionFurniture = () => {
                 gap: 6,
             }}
         >
+            {/* RIGHT SIDE: TEXT with animation */}
+            <Box
+                component={motion.div}
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+                sx={{
+                    width: { xs: '100%', md: '40%' },
+                    textAlign: 'left',
+                    px: { xs: 0, md: 3 },
+                }}
+            >
+                <Typography
+                    variant={'h2'}
+                    sx={{ fontWeight: 'bold', mb: 1, letterSpacing: 1 }}
+                >
+                    Nội thất
+                </Typography>
+                <Typography
+                    variant="subtitle1"
+                    sx={{
+                        mb: 3,
+                        fontWeight: 500,
+                        color: '#f5f5f5',
+                        letterSpacing: 0.8,
+                        maxWidth: 400, // điều chỉnh chiều rộng phù hợp
+                        lineHeight: 1.6,
+                        fontSize: '1rem', // có thể chỉnh nhỏ hơn nếu cần
+                        display: 'block',
+                    }}
+                >
+                    Khám phá những thiết kế nội thất hiện đại, tiện nghi và thẩm mỹ cao,
+                    biến không gian sống của bạn trở nên sang trọng và đầy cảm hứng.
+                </Typography>
+            </Box>
+
             {/* LEFT SIDE: TWO SLIDERS SIDE BY SIDE */}
             <Box
                 sx={{
@@ -80,71 +117,11 @@ const SectionFurniture = () => {
                     },
                 }}
             >
-                {/* Left slider */}
-                <Box sx={{ height: 420, width: '50%', position: 'relative' }}>
-                    <Slider ref={sliderRefLeft} {...settingsNormal}>
-                        {images2.map((src, idx) => (
-                            <Box
-                                key={idx}
-                                sx={{
-                                    position: 'relative',
-                                    borderRadius: 3,
-                                    height: 140,
-                                    mb: 2,
-                                    overflow: 'hidden',
-                                    cursor: 'pointer',
-                                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                                    '&:hover': {
-                                        transform: 'scale(1.05)',
-                                    },
-                                }}
-                            >
-                                <Box
-                                    component="img"
-                                    src={src}
-                                    alt={`slide-left-${idx}`}
-                                    sx={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                        borderRadius: 3,
-                                    }}
-                                />
-                                <Box
-                                    className="overlay"
-                                    sx={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: '100%',
-                                        bgcolor: 'rgba(0,0,0,0.25)',
-                                        opacity: 0,
-                                        transition: 'opacity 0.3s ease',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        color: '#fff',
-                                        fontWeight: '600',
-                                        fontSize: 14,
-                                        pointerEvents: 'none',
-                                        '&:hover': {
-                                            opacity: 1,
-                                        },
-                                    }}
-                                >
-                                    Xem chi tiết
-                                </Box>
-                            </Box>
-                        ))}
-                    </Slider>
-                </Box>
-
                 {/* Right slider */}
                 <Box
                     sx={{
                         height: 420,
-                        width: '50%',
+                        width: '70%',
                         position: 'relative',
                         transform: 'rotate(180deg)',
                     }}
@@ -207,34 +184,67 @@ const SectionFurniture = () => {
                         ))}
                     </Slider>
                 </Box>
-            </Box>
+                {/* Left slider */}
+                <Box sx={{ height: 420, width: '70%', position: 'relative' }}>
+                    <Slider ref={sliderRefLeft} {...settingsNormal}>
+                        {images2.map((src, idx) => (
+                            <Box
+                                key={idx}
+                                sx={{
+                                    position: 'relative',
+                                    borderRadius: 3,
+                                    height: 140,
+                                    mb: 2,
+                                    overflow: 'hidden',
+                                    cursor: 'pointer',
+                                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                                    '&:hover': {
+                                        transform: 'scale(1.05)',
+                                    },
+                                }}
+                            >
+                                <Box
+                                    component="img"
+                                    src={src}
+                                    alt={`slide-left-${idx}`}
+                                    sx={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        borderRadius: 3,
+                                    }}
+                                />
+                                <Box
+                                    className="overlay"
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        bgcolor: 'rgba(0,0,0,0.25)',
+                                        opacity: 0,
+                                        transition: 'opacity 0.3s ease',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        color: '#fff',
+                                        fontWeight: '600',
+                                        fontSize: 14,
+                                        pointerEvents: 'none',
+                                        '&:hover': {
+                                            opacity: 1,
+                                        },
+                                    }}
+                                >
+                                    Xem chi tiết
+                                </Box>
+                            </Box>
+                        ))}
+                    </Slider>
+                </Box>
 
-            {/* RIGHT SIDE: TEXT with animation */}
-            <Box
-                component={motion.div}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                sx={{
-                    width: { xs: '100%', md: '40%' },
-                    textAlign: 'left',
-                    px: { xs: 0, md: 3 },
-                }}
-            >
-                <Typography
-                    variant={'h2'}
-                    sx={{ fontWeight: 'bold', mb: 1, letterSpacing: 1 }}
-                >
-                    Nội thất
-                </Typography>
-                <Typography
-                    variant="subtitle1"
-                    sx={{ mb: 3, fontWeight: 500, color: '#f5f5f5', letterSpacing: 0.8 }}
-                >
-                    Khám phá những thiết kế nội thất hiện đại, tiện nghi và thẩm mỹ cao,
-                    biến không gian sống của bạn trở nên sang trọng và đầy cảm hứng.
-                </Typography>
+
             </Box>
         </Box>
     );

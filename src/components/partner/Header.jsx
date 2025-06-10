@@ -20,6 +20,7 @@ const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [name, setName] = useState('Người dùng');
   const [role, setRole] = useState('');
+  const [avatar, setAvatar] = useState('');
 
   const handleLangClick = (event) => setAnchorElLang(event.currentTarget);
   const handleUserClick = (event) => setAnchorElUser(event.currentTarget);
@@ -34,20 +35,21 @@ const Header = () => {
   };
 
   useEffect(() => {
-  const token = localStorage.getItem('token');
-  console.log('TOKEN:', token); 
+    const token = localStorage.getItem('token');
+    console.log('TOKEN:', token);
 
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-      console.log('DECODED:', decoded);
-      setName(decoded?.Name || 'Người dùng');
-      setRole(decoded?.Role || '')
-    } catch (error) {
-      console.error('Lỗi giải mã token:', error);
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log('DECODED:', decoded);
+        setName(decoded?.Name || 'Người dùng');
+        setRole(decoded?.Role || '');
+        setAvatar(decoded?.AvatarSource || '')
+      } catch (error) {
+        console.error('Lỗi giải mã token:', error);
+      }
     }
-  }
-}, []);
+  }, []);
 
 
   return (
@@ -130,7 +132,7 @@ const Header = () => {
             '&:hover': { opacity: 0.8 },
           }}
         >
-          <Avatar alt="User" src="https://i.pravatar.cc/150?img=3" />
+          <Avatar alt="User" src={avatar || "https://i.pravatar.cc/150?img=3"} />
           <Box sx={{ textAlign: 'left' }}>
             <Typography variant="body2" fontWeight="bold">
               {name}
