@@ -34,20 +34,20 @@ const Header = () => {
   };
 
   useEffect(() => {
-  const token = localStorage.getItem('token');
-  console.log('TOKEN:', token); 
+    const token = localStorage.getItem('token');
+    console.log('TOKEN:', token);
 
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-      console.log('DECODED:', decoded);
-      setName(decoded?.Name || 'Người dùng');
-      setRole(decoded?.Role || '')
-    } catch (error) {
-      console.error('Lỗi giải mã token:', error);
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log('DECODED:', decoded);
+        setName(decoded?.Name || 'Người dùng');
+        setRole(decoded?.Role || '')
+      } catch (error) {
+        console.error('Lỗi giải mã token:', error);
+      }
     }
-  }
-}, []);
+  }, []);
 
 
   return (
@@ -143,7 +143,11 @@ const Header = () => {
         </Box>
 
         <Menu anchorEl={anchorElUser} open={Boolean(anchorElUser)} onClose={handleClose}>
-          <MenuItem onClick={handleClose}>Hồ sơ</MenuItem>
+          <MenuItem onClick={() => {
+            handleClose();
+            navigate('/admin/profile')
+          }}>Hồ sơ
+          </MenuItem>
           <MenuItem
             onClick={() => {
               handleClose();

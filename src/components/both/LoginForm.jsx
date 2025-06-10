@@ -44,7 +44,7 @@ export default function LoginForm({ values, onChange, onSubmit }) {
           backgroundColor: '#f5f5f5',
           color: '#3F5139',
           maxHeight: '90vh',
-          overflowY: 'auto', 
+          overflowY: 'auto',
           boxSizing: 'border-box',
         }}
       >
@@ -63,7 +63,7 @@ export default function LoginForm({ values, onChange, onSubmit }) {
           />
         </Box>
 
-       
+
 
         <Box component="form" onSubmit={onSubmit} mt={2}>
           <TextField
@@ -127,12 +127,15 @@ export default function LoginForm({ values, onChange, onSubmit }) {
             }}
           >
             <Typography
+              component={Link}
+              to={routes.forgotPassword}
               variant="body2"
               sx={{
                 cursor: 'pointer',
                 color: '#4e5c47',
                 fontWeight: 500,
                 transition: 'color 0.3s',
+                textDecoration: 'none',
                 '&:hover': {
                   color: '#3F5139',
                   textDecoration: 'underline',

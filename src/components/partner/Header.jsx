@@ -145,7 +145,12 @@ const Header = () => {
         </Box>
 
         <Menu anchorEl={anchorElUser} open={Boolean(anchorElUser)} onClose={handleClose}>
-          <MenuItem onClick={handleClose}>Hồ sơ</MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              navigate('/profile')
+            }}>Hồ sơ
+          </MenuItem>
           <MenuItem
             onClick={() => {
               handleClose();

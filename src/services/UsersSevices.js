@@ -16,6 +16,40 @@ const loginDesignerAPI = async (email, password) => {
   }
 };
 
+const resetPasswordAPI = async (token, newPassword) => {
+  try {
+    const response = await instance.post('/api/auth/reset-password', null, {
+      params: {
+        token,
+        newPassword,
+      },
+    });
+    console.log('Reset password success:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Reset password error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+const forgetPasswordAPI = async (email, role) => {
+  try {
+    const response = await instance.post('/api/auth/forget-password', null, {
+      params: {
+        email,
+        role,
+      },
+    });
+    console.log('Forgot password request success:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Forgot password error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 const registerDesignerAPI = async (name, email, password, applicationUrl) => {
   try {
     const response = await instance.post('/api/auth/designer/register', {
@@ -48,6 +82,22 @@ const applicationResultAPI = async (email, isApproved) => {
     return response.data;
   } catch (error) {
     console.error('Application result error:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+const updatePasswordAPI = async (password, newPassword) => {
+  try {
+    const response = await instance.post('/api/auth/update-password', null, {
+      params: {
+        password,
+        newPassword,
+      },
+    });
+    console.log('Password update success:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Password update error:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -160,6 +210,7 @@ const getAllOrdersAPI = async (pageNumber = -1, pageSize = -1) => {
 };
 
 
+
 export {
   loginDesignerAPI,
   getAllFurnituresAPI,
@@ -170,5 +221,8 @@ export {
   getOrdersById,
   getAllOrdersAPI,
   registerDesignerAPI,
-  applicationResultAPI
+  applicationResultAPI,
+  updatePasswordAPI,
+  forgetPasswordAPI,
+  resetPasswordAPI
 };
