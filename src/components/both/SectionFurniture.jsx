@@ -1,6 +1,9 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { Box, Typography } from '@mui/material';
+import { 
+    Box, 
+    Typography 
+} from '@mui/material';
 import { motion } from 'framer-motion';
 
 import fur_section from '../../assets/image/fur_section.png';
@@ -90,9 +93,9 @@ const SectionFurniture = () => {
                         fontWeight: 500,
                         color: '#f5f5f5',
                         letterSpacing: 0.8,
-                        maxWidth: 400, // điều chỉnh chiều rộng phù hợp
+                        maxWidth: 400, 
                         lineHeight: 1.6,
-                        fontSize: '1rem', // có thể chỉnh nhỏ hơn nếu cần
+                        fontSize: '1rem', 
                         display: 'block',
                     }}
                 >

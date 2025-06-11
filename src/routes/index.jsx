@@ -4,12 +4,15 @@ export const routes = {
     login: "/login",
     register: "/register",
     forgotPassword: "/forgot-password",
+    resetPassword: "/reset-password",
     adminDashboard: "/admin/dashboard",
     adminFurniture: "/admin/furniture",
     adminDesign: "/admin/design",
     adminOrder: "/admin/order",
     adminOrderDetail: "/admin/orders/:orderId",
     adminProfile: "/admin/profile",
+    adminUser: "/admin/user",
+    adminVerify: "/admin/verify",
 
     
     partnerDashboard: "/dashboard",

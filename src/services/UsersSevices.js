@@ -209,6 +209,55 @@ const getAllOrdersAPI = async (pageNumber = -1, pageSize = -1) => {
   }
 };
 
+// =============User============
+
+const getAllAccountsAPI = async (role = null, pageNumber = -1, pageSize = -1) => {
+  try {
+    const params = {};
+
+    if (role !== null) {
+      params.role = role;
+    }
+
+    if (pageNumber !== -1) {
+      params.pageNumber = pageNumber;
+    }
+
+    if (pageSize !== -1) {
+      params.pageSize = pageSize;
+    }
+
+    const response = await instance.get('/api/accounts', { params });
+    console.log('Get all accounts success:', response);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting accounts:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+const getAwaitingDesignersAPI = async (pageNumber = -1, pageSize = -1) => {
+  try {
+    const params = {};
+
+    if (pageNumber !== -1) {
+      params.pageNumber = pageNumber;
+    }
+
+    if (pageSize !== -1) {
+      params.pageSize = pageSize;
+    }
+
+    const response = await instance.get('/api/accounts/awaiting-designers', { params });
+    console.log('Get awaiting designers success:', response);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting awaiting designers:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 
 
 export {
@@ -224,5 +273,7 @@ export {
   applicationResultAPI,
   updatePasswordAPI,
   forgetPasswordAPI,
-  resetPasswordAPI
+  resetPasswordAPI,
+  getAllAccountsAPI,
+  getAwaitingDesignersAPI
 };

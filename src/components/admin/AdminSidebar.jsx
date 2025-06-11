@@ -14,19 +14,21 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import WeekendIcon from '@mui/icons-material/Weekend';
 import BrushIcon from '@mui/icons-material/Brush';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import ContactMailIcon from '@mui/icons-material/ContactMail';
+import PeopleIcon from '@mui/icons-material/People';
+import ChatIcon from '@mui/icons-material/Chat';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logoGreen from '../../assets/image/logo_green.png';
+import GavelIcon from '@mui/icons-material/Gavel';
 
 const menuItems = [
   { text: 'Thống kê', icon: <DashboardIcon />, route: 'adminDashboard' },
   { text: 'Nội thất', icon: <WeekendIcon />, route: 'adminFurniture' },
   { text: 'Thiết kế', icon: <BrushIcon />, route: 'adminDesign' },
   { text: 'Đơn hàng', icon: <ListAltIcon />, route: 'adminOrder' },
-  { text: 'Hỗ trợ', icon: <SupportAgentIcon />, route: '#' },
-  { text: 'Trò chuyện', icon: <ContactMailIcon />, route: '#' },
+  { text: 'Người dùng', icon: <PeopleIcon />, route: 'adminUser' },
+  { text: 'Phê duyệt', icon: <GavelIcon />, route: 'adminVerify' },
+  { text: 'Trò chuyện', icon: <ChatIcon />, route: '#' },
 ];
 
 const bottomItems = [

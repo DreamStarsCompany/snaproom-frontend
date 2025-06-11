@@ -68,6 +68,13 @@ const ProfileComponent = () => {
       '&.Mui-focused fieldset': {
         borderColor: '#3F5139 !important',
       },
+
+    },
+    '& label': {
+      color: '#666',
+    },
+    '& label.Mui-focused': {
+      color: '#3F5139 !important',
     },
   };
 

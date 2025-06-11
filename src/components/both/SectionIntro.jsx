@@ -1,5 +1,10 @@
 import React from 'react';
-import { Box, Typography, useTheme, useMediaQuery } from '@mui/material';
+import { 
+    Box, 
+    Typography, 
+    useTheme, 
+    useMediaQuery 
+} from '@mui/material';
 
 import intro_section from '../../assets/image/intro_section.png';
 import intro_section2 from '../../assets/image/intro_section2.png';

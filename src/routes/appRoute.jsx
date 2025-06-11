@@ -20,7 +20,9 @@ import AdminOrderDetails from "../pages/admin/AdminOrderDetails";
 import Profile from "../pages/partner/Profile";
 import AdminProfile from "../pages/admin/AdminProfile";
 import ForgotPassword from "../pages/both/ForgotPassword";
-
+import AdminUser from "../pages/admin/AdminUser";
+import ResetPassword from "../pages/both/ResetPassword";
+import AdminVerify from "../pages/admin/AdminVerify";
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -43,6 +45,7 @@ export default function appRoute() {
                 <Route path={routes.login} element={<Login />} />
                 <Route path={routes.register} element={<Register />} />
                 <Route path={routes.forgotPassword} element={<ForgotPassword />} />
+                <Route path={routes.resetPassword} element={<ResetPassword />} />
 
                 <Route path={routes.adminDashboard} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminDashboard /></ProtectedRoute>} />
                 <Route path={routes.adminFurniture} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminFurniture /></ProtectedRoute>} />
@@ -50,14 +53,16 @@ export default function appRoute() {
                 <Route path={routes.adminOrder} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminOrder /></ProtectedRoute>} />
                 <Route path={routes.adminOrderDetail} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminOrderDetails /></ProtectedRoute>} />
                 <Route path={routes.adminProfile} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminProfile /></ProtectedRoute>} />
+                <Route path={routes.adminUser} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminUser /></ProtectedRoute>} />
+                <Route path={routes.adminVerify} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminVerify /></ProtectedRoute>} />
 
                 <Route path={routes.partnerDashboard} element={<ProtectedRoute allowedRoles={["Designer"]}><Dashboard /></ProtectedRoute>} />
                 <Route path={routes.designList} element={<ProtectedRoute allowedRoles={["Designer"]}><DesignTable /></ProtectedRoute>} />
                 <Route path={routes.furList} element={<ProtectedRoute allowedRoles={["Designer"]}><FurnitureTable /></ProtectedRoute>} />
                 <Route path={routes.orderList} element={<ProtectedRoute allowedRoles={["Designer"]}><OrderTable /></ProtectedRoute>} />
-                <Route path={routes.orderDetail} element={<ProtectedRoute allowedRoles={["Designer"]}><OrderDetails /></ProtectedRoute>}/>
+                <Route path={routes.orderDetail} element={<ProtectedRoute allowedRoles={["Designer"]}><OrderDetails /></ProtectedRoute>} />
                 <Route path={routes.profile} element={<ProtectedRoute allowedRoles={["Designer"]}><Profile /></ProtectedRoute>} />
-                
+
             </Routes>
 
         </div>

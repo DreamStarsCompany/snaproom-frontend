@@ -21,7 +21,7 @@ export default function LoginForm({ values, onChange, onSubmit }) {
   return (
     <Box
       sx={{
-        height: '100vh', // full viewport height
+        height: '100vh',
         maxHeight: '100vh',
         bgcolor: '#3F5139',
         display: 'flex',

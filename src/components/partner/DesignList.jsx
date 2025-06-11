@@ -24,10 +24,10 @@ const DesignList = ({ searchTerm }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getAllDesignsByDesAPI(); // lấy tất cả dữ liệu
+        const res = await getAllDesignsByDesAPI(); 
         const items = res.data.items || [];
         setAllDesigns(items);
-        setFilteredDesigns(items); // ban đầu chưa search
+        setFilteredDesigns(items); 
       } catch (err) {
         console.error('Error fetching designs:', err);
       }

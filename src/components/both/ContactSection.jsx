@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, Typography, TextField, Button, Grid, Divider } from '@mui/material';
+import { 
+    Box, 
+    Typography, 
+    TextField, 
+    Button, 
+    Grid, 
+    Divider 
+} from '@mui/material';
 import { motion } from 'framer-motion';
 
 const ContactSection = () => {

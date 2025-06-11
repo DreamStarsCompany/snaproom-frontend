@@ -1,5 +1,10 @@
 import React from 'react';
-import { Box, Typography, useTheme, useMediaQuery } from '@mui/material';
+import { 
+    Box, 
+    Typography, 
+    useTheme, 
+    useMediaQuery 
+} from '@mui/material';
 import { motion } from 'framer-motion';
 
 import des_section from '../../assets/image/des_section.png';

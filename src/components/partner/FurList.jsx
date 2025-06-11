@@ -24,7 +24,7 @@ const FurList = ({ searchTerm }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getAllFursByDesAPI(); // Không phân trang ở API
+        const res = await getAllFursByDesAPI(); 
         const items = res.data.items || [];
         setAllFurnitures(items);
         setFilteredFurnitures(items);
