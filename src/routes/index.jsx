@@ -22,5 +22,6 @@ export const routes = {
     orderDetail: "/orders/:orderId",
     profile: "profile",
     newFurniture: "/furniture/create",
+    waitList: "/waiting-list"
 
 };

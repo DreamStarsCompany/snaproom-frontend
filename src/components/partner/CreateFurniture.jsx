@@ -133,7 +133,7 @@ const CreateFurniture = () => {
               }}
             />
           }
-          label="Hiển thị với khách hàng" sx={{ mt: 1 }}
+          label="Còn hàng" sx={{ mt: 1 }}
         />
 
         {/* STYLE SELECT */}
@@ -215,7 +215,7 @@ const CreateFurniture = () => {
               <img
                 key={index}
                 src={URL.createObjectURL(img)}
-                alt={`Image ${index + 1}`}
+                alt={""}
                 style={{ width: 150, height: 'auto', borderRadius: 8 }}
               />
             ))}

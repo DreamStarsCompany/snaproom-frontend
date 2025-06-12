@@ -77,7 +77,7 @@ export default function RegisterForm({ onRegister }) {
                     boxShadow: '0 6px 20px rgba(0,0,0,0.15)',
                     backgroundColor: '#f5f5f5',
                     color: '#3F5139',
-                    maxHeight: '90vh',
+                    maxHeight: '100vh',
                     overflowY: 'auto',
                     boxSizing: 'border-box',
                 }}

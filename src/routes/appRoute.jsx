@@ -24,6 +24,7 @@ import AdminUser from "../pages/admin/AdminUser";
 import ResetPassword from "../pages/both/ResetPassword";
 import NewFurniture from "../pages/partner/NewFurniture";
 import AdminWaiting from "../pages/admin/AdminWaiting";
+import WaitingTable from "../pages/partner/WaitingTable";
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -64,6 +65,7 @@ export default function appRoute() {
                 <Route path={routes.orderDetail} element={<ProtectedRoute allowedRoles={["Designer"]}><OrderDetails /></ProtectedRoute>} />
                 <Route path={routes.profile} element={<ProtectedRoute allowedRoles={["Designer"]}><Profile /></ProtectedRoute>} />
                 <Route path={routes.newFurniture} element={<ProtectedRoute allowedRoles={["Designer"]}><NewFurniture /></ProtectedRoute>} />
+                <Route path={routes.waitList} element={<ProtectedRoute allowedRoles={["Designer"]}><WaitingTable /></ProtectedRoute>} />
 
             </Routes>
 

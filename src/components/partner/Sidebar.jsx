@@ -18,13 +18,14 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logoGreen from '../../assets/image/logo_green.png';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 
 const menuItems = [
   { text: 'Thống kê', icon: <DashboardIcon />, route: 'partnerDashboard' },
   { text: 'Nội thất', icon: <WeekendIcon />, route:'furList' },
   { text: 'Thiết kế', icon: <BrushIcon />, route: 'designList' },
   { text: 'Đơn hàng', icon: <ListAltIcon />, route: 'orderList' },
-  { text: 'Sản phẩm chờ', icon: <ListAltIcon />, route: 'orderList' },
+  { text: 'Sản phẩm chờ', icon: <HourglassTopIcon />, route: 'waitList' },
   { text: 'Trò chuyện', icon: <SupportAgentIcon />, route: '#' },
 ];
 
