@@ -74,7 +74,7 @@ export default function ChangePasswordDialog({ open, onClose, onSubmit }) {
         color: '#3F5139',
       },
       input: { color: '#3F5139' },
-      mb: 2, // khoảng cách dưới mỗi TextField
+      mb: 2, 
     },
   };
 

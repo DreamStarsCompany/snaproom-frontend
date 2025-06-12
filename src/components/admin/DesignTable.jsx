@@ -24,10 +24,10 @@ const DesignTable = ({ searchTerm }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getAllDesignsAPI(); // lấy tất cả dữ liệu
+        const res = await getAllDesignsAPI(); 
         const items = res.data.items || [];
         setAllDesigns(items);
-        setFilteredDesigns(items); // ban đầu chưa search
+        setFilteredDesigns(items); 
       } catch (err) {
         console.error('Error fetching designs:', err);
       }

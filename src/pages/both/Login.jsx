@@ -30,7 +30,7 @@ export default function Login() {
       const decoded = jwtDecode(res);
       const role = decoded.Role || decoded['Role'];
 
-      // Trước tiên chuyển hướng
+      
       if (role === 'Designer' || role === 1 || role === '1') {
         navigate(routes.partnerDashboard, { state: { toastMessage: 'Đăng nhập thành công!' } });
       } else if (role === 'Admin' || role === 0 || role === '0') {

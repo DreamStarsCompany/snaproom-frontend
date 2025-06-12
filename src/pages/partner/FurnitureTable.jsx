@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 import Sidebar from '../../components/partner/Sidebar';
 import Header from '../../components/partner/Header';
-import { Box, Typography, InputBase } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { Box, Typography, InputBase, IconButton } from '@mui/material';
+import { useLocation, useNavigate  } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FurList from '../../components/partner/FurList';
+import { routes } from '../../routes';
 
 export default function FurnitureTable() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -35,36 +38,49 @@ export default function FurnitureTable() {
               Nội thất
             </Typography>
 
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                width: 300,
-                bgcolor: 'white',
-                borderRadius: '999px',
-                px: 2,
-                py: '6px',
-                boxShadow: '0 0 0 1px #ccc',
-              }}
-            >
-              <SearchIcon sx={{ color: 'gray', mr: 1 }} />
-              <InputBase
-                placeholder="Tên nội thất..."
-                variant="standard" // thêm dòng này
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+            {/* Phần search + nút thêm */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box
                 sx={{
-                  flex: 1,
-                  color: 'gray',
-                  fontSize: 16,
-                  '& .MuiInputBase-input': {
-                    p: 0,
-                  },
-                  '&:focus-within': {
-                    outline: 'none',
-                  },
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: 300,
+                  bgcolor: 'white',
+                  borderRadius: '999px',
+                  px: 2,
+                  py: '6px',
+                  boxShadow: '0 0 0 1px #ccc',
                 }}
-              />
+              >
+                <SearchIcon sx={{ color: 'gray', mr: 1 }} />
+                <InputBase
+                  placeholder="Tên nội thất..."
+                  variant="standard"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  sx={{
+                    flex: 1,
+                    color: 'gray',
+                    fontSize: 16,
+                    '& .MuiInputBase-input': { p: 0 },
+                    '&:focus-within': { outline: 'none' },
+                  }}
+                />
+              </Box>
+
+              <IconButton
+                onClick={() => navigate(routes.newFurniture)}
+                sx={{
+                  backgroundColor: '#3F5139',
+                  color: '#fff',
+                  '&:hover': { backgroundColor: '#33432e' },
+                  width: 48,
+                  height: 48,
+                  borderRadius: '50%',
+                }}
+              >
+                <AddIcon />
+              </IconButton>
             </Box>
           </Box>
           <Box

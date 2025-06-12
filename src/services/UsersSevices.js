@@ -56,7 +56,7 @@ const registerDesignerAPI = async (name, email, password, applicationUrl) => {
       name,
       email,
       password,
-      applicationUrl: applicationUrl, 
+      applicationUrl: applicationUrl,
     });
     console.log('Register success:', response.data);
     return response.data;
@@ -113,7 +113,7 @@ const getAllFurnituresAPI = async (pageNumber = -1, pageSize = -1) => {
       },
     });
     console.log('Get furnitures success:', response);
-    return response; 
+    return response;
   } catch (error) {
     console.error('Get furnitures error:', error);
     throw error;
@@ -130,12 +130,29 @@ const getAllFursByDesAPI = async (pageNumber = -1, pageSize = -1) => {
       },
     });
     console.log('Get furnitures success:', response);
-    return response; 
+    return response;
   } catch (error) {
     console.error('Get furnitures error:', error);
     throw error;
   }
 };
+
+const createFurnitureAPI = async (formData) => {
+  try {
+    const response = await instance.post('/api/furnitures', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log('Create furniture success:', response);
+    return response;
+  } catch (error) {
+    console.error('Error creating furniture:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 
 // =============Design============
 const getAllDesignsAPI = async (pageNumber = -1, pageSize = -1) => {
@@ -147,7 +164,7 @@ const getAllDesignsAPI = async (pageNumber = -1, pageSize = -1) => {
       },
     });
     console.log('Get designs success:', response);
-    return response; 
+    return response;
   } catch (error) {
     console.error('Get designs error:', error);
     throw error;
@@ -163,7 +180,7 @@ const getAllDesignsByDesAPI = async (pageNumber = -1, pageSize = -1) => {
       },
     });
     console.log('Get designs success:', response);
-    return response; 
+    return response;
   } catch (error) {
     console.error('Get designs error:', error);
     throw error;
@@ -257,8 +274,64 @@ const getAwaitingDesignersAPI = async (pageNumber = -1, pageSize = -1) => {
   }
 };
 
+// =============Category============
 
+const getAllCategoriesAPI = async (style = null, pageNumber = -1, pageSize = -1) => {
+  try {
+    const params = {};
 
+    if (style !== null) {
+      // Giữ style là kiểu boolean ngay từ đầu (true hoặc false)
+      params.style = style;
+    }
+
+    if (pageNumber !== -1) {
+      params.pageNumber = pageNumber;
+    }
+
+    if (pageSize !== -1) {
+      params.pageSize = pageSize;
+    }
+
+    const response = await instance.get('/api/categories', { params });
+    console.log('Get all categories success:', response);
+    return response.data.items;
+  } catch (error) {
+    console.error('Error getting categories:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// =============Product============
+
+const getNewProductsAPI = async (pageNumber = -1, pageSize = -1) => {
+  try {
+    const response = await instance.get('/api/products/new', {
+      params: {
+        pageNumber,
+        pageSize,
+      },
+    });
+    console.log('Get new products success:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error getting new products:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+const createNewProductAPI = async (id) => {
+  try {
+    const response = await instance.post('/api/products/new', null, {
+      params: { id },
+    });
+    console.log('Create new product success:', response);
+    return response;
+  } catch (error) {
+    console.error('Error creating new product:', error.response?.data || error.message);
+    throw error;
+  }
+};
 
 export {
   loginDesignerAPI,
@@ -275,5 +348,9 @@ export {
   forgetPasswordAPI,
   resetPasswordAPI,
   getAllAccountsAPI,
-  getAwaitingDesignersAPI
+  getAwaitingDesignersAPI,
+  createFurnitureAPI,
+  getAllCategoriesAPI,
+  getNewProductsAPI,
+  createNewProductAPI
 };

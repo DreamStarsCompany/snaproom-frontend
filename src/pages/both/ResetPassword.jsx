@@ -12,7 +12,7 @@ export default function ResetPassword() {
     try {
       await resetPasswordAPI(token, newPassword);
       toast.success('Đặt lại mật khẩu thành công');
-      // Có thể redirect về trang login nếu muốn
+      
     } catch (error) {
       toast.error('Đặt lại mật khẩu thất bại');
     }

@@ -12,7 +12,7 @@ export const routes = {
     adminOrderDetail: "/admin/orders/:orderId",
     adminProfile: "/admin/profile",
     adminUser: "/admin/user",
-    adminVerify: "/admin/verify",
+    adminWaiting: "/admin/waiting",
 
     
     partnerDashboard: "/dashboard",
@@ -21,5 +21,6 @@ export const routes = {
     orderList: "/orders",
     orderDetail: "/orders/:orderId",
     profile: "profile",
+    newFurniture: "/furniture/create",
 
 };

@@ -108,7 +108,7 @@ const SectionFurniture = () => {
             <Box
                 sx={{
                     width: { xs: '100%', md: '55%' },
-                    maxWidth: 600,
+                    maxWidth: 400,
                     display: 'flex',
                     gap: 3,
                     justifyContent: 'center',

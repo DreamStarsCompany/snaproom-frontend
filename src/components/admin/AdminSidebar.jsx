@@ -19,7 +19,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logoGreen from '../../assets/image/logo_green.png';
-import GavelIcon from '@mui/icons-material/Gavel';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 
 const menuItems = [
   { text: 'Thống kê', icon: <DashboardIcon />, route: 'adminDashboard' },
@@ -27,7 +27,7 @@ const menuItems = [
   { text: 'Thiết kế', icon: <BrushIcon />, route: 'adminDesign' },
   { text: 'Đơn hàng', icon: <ListAltIcon />, route: 'adminOrder' },
   { text: 'Người dùng', icon: <PeopleIcon />, route: 'adminUser' },
-  { text: 'Phê duyệt', icon: <GavelIcon />, route: 'adminVerify' },
+  { text: 'Sản phẩm chờ', icon: <HourglassTopIcon />, route: 'adminWaiting' },
   { text: 'Trò chuyện', icon: <ChatIcon />, route: '#' },
 ];
 

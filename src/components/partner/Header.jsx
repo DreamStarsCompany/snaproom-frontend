@@ -132,7 +132,7 @@ const Header = () => {
             '&:hover': { opacity: 0.8 },
           }}
         >
-          <Avatar alt="User" src={avatar || "https://i.pravatar.cc/150?img=3"} />
+          <Avatar alt="User" src={avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} />
           <Box sx={{ textAlign: 'left' }}>
             <Typography variant="body2" fontWeight="bold">
               {name}

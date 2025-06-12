@@ -126,7 +126,7 @@ const AdminProfileComponent = () => {
       {/* Avatar + Tên */}
       <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
         <Avatar
-          src={userInfo.avatarSource || 'https://i.pravatar.cc/150?img=3'}
+          src={userInfo.avatarSource || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}
           sx={{ width: 120, height: 120, mb: 2 }}
         />
         <Typography variant="h5" fontWeight={600}>

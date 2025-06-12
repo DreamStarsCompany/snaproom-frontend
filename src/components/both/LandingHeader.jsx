@@ -179,7 +179,7 @@ const LandingHeader = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                whileHover={{ scale: 1.1 }}  // phóng to lên khi hover
+                whileHover={{ scale: 1.1 }}  
               />
 
             </Box>

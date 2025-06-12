@@ -22,7 +22,8 @@ import AdminProfile from "../pages/admin/AdminProfile";
 import ForgotPassword from "../pages/both/ForgotPassword";
 import AdminUser from "../pages/admin/AdminUser";
 import ResetPassword from "../pages/both/ResetPassword";
-import AdminVerify from "../pages/admin/AdminVerify";
+import NewFurniture from "../pages/partner/NewFurniture";
+import AdminWaiting from "../pages/admin/AdminWaiting";
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -54,7 +55,7 @@ export default function appRoute() {
                 <Route path={routes.adminOrderDetail} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminOrderDetails /></ProtectedRoute>} />
                 <Route path={routes.adminProfile} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminProfile /></ProtectedRoute>} />
                 <Route path={routes.adminUser} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminUser /></ProtectedRoute>} />
-                <Route path={routes.adminVerify} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminVerify /></ProtectedRoute>} />
+                <Route path={routes.adminWaiting} element={<ProtectedRoute allowedRoles={["Admin"]}><AdminWaiting /></ProtectedRoute>} />
 
                 <Route path={routes.partnerDashboard} element={<ProtectedRoute allowedRoles={["Designer"]}><Dashboard /></ProtectedRoute>} />
                 <Route path={routes.designList} element={<ProtectedRoute allowedRoles={["Designer"]}><DesignTable /></ProtectedRoute>} />
@@ -62,6 +63,7 @@ export default function appRoute() {
                 <Route path={routes.orderList} element={<ProtectedRoute allowedRoles={["Designer"]}><OrderTable /></ProtectedRoute>} />
                 <Route path={routes.orderDetail} element={<ProtectedRoute allowedRoles={["Designer"]}><OrderDetails /></ProtectedRoute>} />
                 <Route path={routes.profile} element={<ProtectedRoute allowedRoles={["Designer"]}><Profile /></ProtectedRoute>} />
+                <Route path={routes.newFurniture} element={<ProtectedRoute allowedRoles={["Designer"]}><NewFurniture /></ProtectedRoute>} />
 
             </Routes>
 

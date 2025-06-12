@@ -1,5 +1,5 @@
 import React from 'react';
-import ForgotPasswordForm from '../../components/both/ForgotPasswordForm'; // Đảm bảo đúng đường dẫn
+import ForgotPasswordForm from '../../components/both/ForgotPasswordForm'; 
 import { toast } from 'react-toastify';
 import { forgetPasswordAPI } from '../../services/UsersSevices';
 

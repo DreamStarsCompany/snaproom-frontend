@@ -24,6 +24,7 @@ const menuItems = [
   { text: 'Nội thất', icon: <WeekendIcon />, route:'furList' },
   { text: 'Thiết kế', icon: <BrushIcon />, route: 'designList' },
   { text: 'Đơn hàng', icon: <ListAltIcon />, route: 'orderList' },
+  { text: 'Sản phẩm chờ', icon: <ListAltIcon />, route: 'orderList' },
   { text: 'Trò chuyện', icon: <SupportAgentIcon />, route: '#' },
 ];
 
