@@ -62,6 +62,9 @@ const Header = () => {
         justifyContent: 'space-between',
         boxShadow: '0px 2px 0px rgba(0,0,0,0.1)',
         color: '#2e3a25',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
       }}
     >
       {/* Search Bar */}

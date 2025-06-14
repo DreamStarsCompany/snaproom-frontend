@@ -6,7 +6,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { getAllOrdersByDesAPI } from '../../services/UsersSevices';
+import { getAllAccountsAPI, getNewProductsAPI } from '../../services/UsersSevices';
 import {
   LineChart,
   Line,
@@ -19,14 +19,16 @@ import {
   Bar,
   PieChart,
   Pie,
-  Cell
+  Cell,
+  AreaChart,  
+  Area
 } from 'recharts';
 // import { Tooltip as MuiTooltip } from '@mui/material';
 
-const DashboardDesigner = () => {
-  const [totalOrders, setTotalOrders] = useState(0);
-  const [totalCustomers, setTotalCustomers] = useState(0);
+const Dashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [totalDesigners, setTotalDesigners] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   const COLORS = ['#0088FE', '#FFBB28', '#00C49F'];
 
@@ -40,62 +42,64 @@ const DashboardDesigner = () => {
     // Sau này khi có API fetch data ở đây theo tháng
   };
 
-  // Mock top sản phẩm bán chạy
-  const productData = [
-    { name: 'Sản phẩm A', sales: 50, image: 'https://via.placeholder.com/50' },
-    { name: 'Sản phẩm B', sales: 45, image: 'https://via.placeholder.com/50' },
-    { name: 'Sản phẩm C', sales: 40, image: 'https://via.placeholder.com/50' },
-    { name: 'Sản phẩm D', sales: 35, image: 'https://via.placeholder.com/50' },
-    { name: 'Sản phẩm E', sales: 30, image: 'https://via.placeholder.com/50' },
-  ];
+  useEffect(() => {
+    fetchAccounts();
+    fetchData();
+  }, []);
 
-  const feedbackByProduct = {
-    'Sản phẩm A': [
-      { id: 1, customer: 'Nguyễn Văn A', feedback: 'Sản phẩm rất tốt', image: 'https://via.placeholder.com/50' },
-      { id: 2, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 3, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 4, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 5, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-    ],
-    'Sản phẩm B': [
-      { id: 6, customer: 'Trần Thị C', feedback: 'Đóng gói cẩn thận', image: 'https://via.placeholder.com/50' },
-      { id: 7, customer: 'Lê Văn D', feedback: 'Chất lượng tốt', image: 'https://via.placeholder.com/50' },
-      { id: 8, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 9, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 10, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-    ],
-    'Sản phẩm C': [
-      { id: 11, customer: 'Phạm Thị E', feedback: 'Giá hợp lý', image: 'https://via.placeholder.com/50' },
-      { id: 12, customer: 'Đỗ Văn F', feedback: 'Sẽ ủng hộ tiếp', image: 'https://via.placeholder.com/50' },
-      { id: 13, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 14, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 15, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-    ],
+  const fetchAccounts = async () => {
+    try {
+      const response = await getAllAccountsAPI();
+      const items = response.items || [];
+      const designerCount = items.filter(user => user.role === 1).length;
+      setTotalDesigners(designerCount);
+    } catch (err) {
+      console.error('Error fetching accounts:', err);
+    }
   };
 
+  const fetchData = async () => {
+    try {
+      const res = await getNewProductsAPI();
+      const total = res?.items?.length || 0;
+      setTotalProducts(total);
+    } catch (err) {
+      console.error('Error fetching products:', err);
+    }
+  };
+
+  // Mock top sản phẩm bán chạy
+  const designerData = [
+    { name: 'Designer A', revenue: 12000000, image: 'https://via.placeholder.com/50' },
+    { name: 'Designer B', revenue: 11000000, image: 'https://via.placeholder.com/50' },
+    { name: 'Designer C', revenue: 9500000, image: 'https://via.placeholder.com/50' },
+    { name: 'Designer D', revenue: 8200000, image: 'https://via.placeholder.com/50' },
+    { name: 'Designer E', revenue: 7800000, image: 'https://via.placeholder.com/50' },
+  ];
 
   // Mock trạng thái đơn hàng
   const statusData = [
-    { name: 'Buy', value: 15 },
-    { name: 'Processing', value: 25 },
-    { name: 'Completed', value: 60 },
+    { name: 'Đã duyệt', value: 22 },
+    { name: 'Chưa duyệt', value: 3 },
   ];
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+  const orderSystemData = [
+    { name: 'Tháng 1', completed: 120, pending: 30 },
+    { name: 'Tháng 2', completed: 150, pending: 20 },
+    { name: 'Tháng 3', completed: 100, pending: 40 },
+    { name: 'Tháng 4', completed: 180, pending: 15 },
+    { name: 'Tháng 5', completed: 140, pending: 25 },
+  ];
 
-  const fetchOrders = async () => {
-    try {
-      const response = await getAllOrdersByDesAPI();
-      const items = response.items || [];
-      setTotalOrders(response.totalItems || 0);
-      const uniqueCustomers = [...new Set(items.map(order => order.customer?.name))];
-      setTotalCustomers(uniqueCustomers.length);
-    } catch (err) {
-      console.error('Error fetching orders:', err);
-    }
-  };
+  // Mock user growth data
+  const userGrowthData = [
+    { month: 'Tháng 1', users: 120 },
+    { month: 'Tháng 2', users: 150 },
+    { month: 'Tháng 3', users: 200 },
+    { month: 'Tháng 4', users: 250 },
+    { month: 'Tháng 5', users: 300 },
+    { month: 'Tháng 6', users: 350 },
+  ];
 
 
   return (
@@ -112,9 +116,9 @@ const DashboardDesigner = () => {
             </Box>
 
             <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
-              Tổng người mua
+              Tổng nhà thiết kế
             </Typography>
-            <Typography variant="h4" fontWeight="bold" mt={1}>{totalCustomers}</Typography>
+            <Typography variant="h4" fontWeight="bold" mt={1}>{totalDesigners}</Typography>
 
             <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
               <TrendingUpIcon sx={{ color: 'green', fontSize: 20 }} />
@@ -129,18 +133,40 @@ const DashboardDesigner = () => {
           <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2, height: '70%', position: 'relative' }}>
             <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
               <Avatar sx={{ bgcolor: '#FDEBD3', width: 56, height: 56 }}>
-                <InventoryIcon sx={{ color: '#F59E0B', fontSize: 30 }} />
+                <AccessTimeIcon sx={{ color: '#F59E0B', fontSize: 30 }} />
               </Avatar>
             </Box>
 
             <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
-              Tổng đơn hàng
+              Nhà thiết kế chờ duyệt
             </Typography>
-            <Typography variant="h4" fontWeight="bold" mt={1}>{totalOrders}</Typography>
+            <Typography variant="h4" fontWeight="bold" mt={1}>0</Typography>
+
+            <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
+              <TrendingDownIcon sx={{ color: 'red', fontSize: 20 }} />
+              <Typography variant="body2" sx={{ color: 'red', fontWeight: 500 }}>0.3%</Typography>
+              <Typography variant="body2" color="textSecondary">So với hôm qua</Typography>
+            </Stack>
+          </Card>
+        </Grid>
+
+        {/* Total Pending */}
+        <Grid item xs={12} sm={6} md={3} sx={{ flex: 1 }}>
+          <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2, height: '70%', position: 'relative' }}>
+            <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+              <Avatar sx={{ bgcolor: '#FFEFE3', width: 56, height: 56 }}>
+                <InventoryIcon sx={{ color: '#F97316', fontSize: 30 }} />
+              </Avatar>
+            </Box>
+
+            <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
+              Sản phẩm chờ duyệt
+            </Typography>
+            <Typography variant="h4" fontWeight="bold" mt={1}>{totalProducts}</Typography>
 
             <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
               <TrendingUpIcon sx={{ color: 'green', fontSize: 20 }} />
-              <Typography variant="body2" sx={{ color: 'green', fontWeight: 500 }}>1.3%</Typography>
+              <Typography variant="body2" sx={{ color: 'green', fontWeight: 500 }}>1.8%</Typography>
               <Typography variant="body2" color="textSecondary">So với hôm qua</Typography>
             </Stack>
           </Card>
@@ -158,7 +184,7 @@ const DashboardDesigner = () => {
             <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
               Tổng doanh thu
             </Typography>
-            <Typography variant="h4" fontWeight="bold" mt={1}>43.9M VNĐ</Typography>
+            <Typography variant="h4" fontWeight="bold" mt={1}>48.2M VNĐ</Typography>
 
             <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
               <TrendingDownIcon sx={{ color: 'red', fontSize: 20 }} />
@@ -168,27 +194,6 @@ const DashboardDesigner = () => {
           </Card>
         </Grid>
 
-        {/* Total Pending */}
-        <Grid item xs={12} sm={6} md={3} sx={{ flex: 1 }}>
-          <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2, height: '70%', position: 'relative' }}>
-            <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
-              <Avatar sx={{ bgcolor: '#FFEFE3', width: 56, height: 56 }}>
-                <AccessTimeIcon sx={{ color: '#F97316', fontSize: 30 }} />
-              </Avatar>
-            </Box>
-
-            <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
-              Tổng thời gian
-            </Typography>
-            <Typography variant="h4" fontWeight="bold" mt={1}>1,040</Typography>
-
-            <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
-              <TrendingUpIcon sx={{ color: 'green', fontSize: 20 }} />
-              <Typography variant="body2" sx={{ color: 'green', fontWeight: 500 }}>1.8%</Typography>
-              <Typography variant="body2" color="textSecondary">So với hôm qua</Typography>
-            </Stack>
-          </Card>
-        </Grid>
       </Grid>
 
       {/* Line Chart */}
@@ -219,17 +224,17 @@ const DashboardDesigner = () => {
       {/* Phần biểu đồ ngang gồm 2 biểu đồ BarChart và Donut Chart */}
       <Grid container spacing={2} mt={4}>
         {/* Bar chart top 5 sản phẩm */}
+        {/* Bar chart top 5 nhà thiết kế doanh thu cao */}
         <Grid item xs={12} md={6} sx={{ flex: 1 }}>
           <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
-            <Typography variant="h6" fontWeight="bold" mb={2}>Top 5 sản phẩm bán chạy</Typography>
+            <Typography variant="h6" fontWeight="bold" mb={2}>Top 5 nhà thiết kế doanh thu cao</Typography>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={productData} layout="vertical">
+              <BarChart data={designerData} layout="vertical" margin={{ top: 20, right: 20, left: 18, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" height={20} tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-
+                <XAxis type="number" height={20} tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} axisLine={false} tickLine={false} />
                 <YAxis dataKey="name" type="category" />
-                <Tooltip />
-                <Bar dataKey="sales" fill="#4DA8DA" barSize={25} />
+                <Tooltip formatter={(value) => `${value.toLocaleString()} VNĐ`} />
+                <Bar dataKey="revenue" fill="#4DA8DA" barSize={25} />
               </BarChart>
             </ResponsiveContainer>
           </Card>
@@ -250,6 +255,8 @@ const DashboardDesigner = () => {
                   innerRadius={60}
                   dataKey="value"
                   label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  startAngle={90}
+                  endAngle={-270}
                 >
                   {statusData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index]} />
@@ -262,50 +269,42 @@ const DashboardDesigner = () => {
         </Grid>
       </Grid>
 
-      {/* Danh sách feedback chia theo sản phẩm */}
-      <Grid container spacing={2} mt={4}>
-  {Object.entries(feedbackByProduct).map(([productName, feedbacks]) => (
-    <Grid item xs={12} md={4} key={productName} sx={{ flex: 1 }}>
-      <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
-        <Typography variant="h6" fontWeight="bold" mb={2}>{productName}</Typography>
-        <Box
-          sx={{
-            maxHeight: 200,
-            overflowY: 'auto',
-            pr: 1, // thêm padding tránh sát mép phải
-            '&::-webkit-scrollbar': {
-              width: '6px',
-              display: 'none',
-            },
-            '&:hover::-webkit-scrollbar': {
-              display: 'block',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              backgroundColor: '#ccc',
-              borderRadius: '4px',
-            },
-            '&::-webkit-scrollbar-track': {
-              backgroundColor: '#f0f0f0',
-            },
-          }}
-        >
-          {feedbacks.map(feedback => (
-            <Box key={feedback.id} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Avatar src={feedback.image} alt={productName} sx={{ mr: 2 }} />
-              <Box>
-                <Typography variant="body2" color="textSecondary">Khách: {feedback.customer}</Typography>
-                <Typography variant="body2">{feedback.feedback}</Typography>
-              </Box>
-            </Box>
-          ))}
-        </Box>
+      {/* Stacked Bar chart đơn hàng toàn hệ thống */}
+      <Card sx={{ mt: 4, p: 3, borderRadius: 3, boxShadow: 2 }}>
+        <Typography variant="h6" fontWeight="bold" mb={2}>Đơn hàng toàn hệ thống</Typography>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={orderSystemData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="completed" stackId="a" fill="#84AE92" name="Hoàn thành" />
+            <Bar dataKey="pending" stackId="a" fill="#FFD586" name="Chưa hoàn thành" />
+          </BarChart>
+        </ResponsiveContainer>
       </Card>
-    </Grid>
-  ))}
-</Grid>
+
+      <Card sx={{ mt: 4, p: 3, borderRadius: 3, boxShadow: 2 }}>
+        <Typography variant="h6" fontWeight="bold" mb={2}>Tăng trưởng người dùng theo tháng</Typography>
+        <ResponsiveContainer width="100%" height={300}>
+          <AreaChart data={userGrowthData}>
+            <defs>
+              <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Area type="monotone" dataKey="users" stroke="#8884d8" fillOpacity={1} fill="url(#colorUsers)" name="Người dùng" />
+          </AreaChart>
+        </ResponsiveContainer>
+      </Card>
 
     </Box>
   );
 };
 
-export default DashboardDesigner;
+export default Dashboard;
