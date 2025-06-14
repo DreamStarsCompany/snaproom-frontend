@@ -4,6 +4,7 @@ import Header from '../../components/partner/Header';
 import { Box, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import DashboardDesigner from '../../components/partner/DashboardDesigner';
 
 export default function Dashboard() {
   const location = useLocation();
@@ -19,17 +20,32 @@ export default function Dashboard() {
       <Sidebar />
 
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        <Header />
-        <Box sx={{ lexGrow: 1,
-              bgcolor: '#f5f5f5',
-              p: 2,
-              overflowY: 'auto', }}>
-          <Typography variant='h4' sx={{ p: 2, fontWeight: '500' }} >
-            Thống kê
-          </Typography>
+        <Box sx={{ flexShrink: 0, minHeight: 64 }}>
+          <Header />
         </Box>
 
-        <Box sx={{ flexGrow: 1, bgcolor: '#f5f5f5', p: 2 }}>
+        <Box sx={{
+          lexGrow: 1,
+          bgcolor: '#f5f5f5',
+          p: 2,
+          overflowY: 'auto',
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, mb: 2, mt: 2 }}>
+            <Typography variant='h4' sx={{ fontWeight: 500 }}>
+              Thống kê
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              flexGrow: 1,
+              bgcolor: '#f5f5f5',
+              p: 2,
+              overflowY: 'auto',
+            }}
+          >
+            <DashboardDesigner />
+          </Box>
+
         </Box>
       </Box>
     </Box>

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import SearchIcon from '@mui/icons-material/Search';
+import React, { useEffect } from 'react';
 import Sidebar from '../../components/partner/Sidebar';
 import Header from '../../components/partner/Header';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import CreateFurniture from '../../components/partner/CreateFurniture';

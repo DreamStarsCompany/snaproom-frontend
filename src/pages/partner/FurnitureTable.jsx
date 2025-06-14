@@ -74,8 +74,8 @@ export default function FurnitureTable() {
                   backgroundColor: '#3F5139',
                   color: '#fff',
                   '&:hover': { backgroundColor: '#33432e' },
-                  width: 48,
-                  height: 48,
+                  width: 42,
+                  height: 42,
                   borderRadius: '50%',
                 }}
               >
