@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Pagination,
+    Box, Table, TableBody, TableCell, TableContainer, TableHead,
+    TableRow, Paper, Pagination,
 } from '@mui/material';
 import { getAllOrdersByDesAPI } from '../../services/UsersSevices';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../routes';
 
-const OrderList = () => {
+const OrderList = ({ searchTerm, statusFilter }) => {
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [page, setPage] = useState(1);
@@ -25,8 +18,21 @@ const OrderList = () => {
         const fetchData = async () => {
             try {
                 const res = await getAllOrdersByDesAPI(page, pageSize);
-                console.log('Response:', res);
-                setOrders(res.items || []);
+                let filteredOrders = res.items || [];
+
+                // Lọc theo trạng thái
+                if (statusFilter) {
+                    filteredOrders = filteredOrders.filter(order => order.status === statusFilter);
+                }
+
+                // Lọc theo mã đơn hàng
+                if (searchTerm) {
+                    filteredOrders = filteredOrders.filter(order =>
+                        order.id.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                }
+
+                setOrders(filteredOrders);
                 setTotalPages(res.totalPages || 1);
             } catch (err) {
                 console.error('Error fetching orders:', err);
@@ -34,14 +40,12 @@ const OrderList = () => {
         };
 
         fetchData();
-    }, [page, pageSize]);
-
+    }, [page, pageSize, searchTerm, statusFilter]);
 
     const handleChangePage = (event, value) => {
         setPage(value);
     };
 
-    // Format ngày theo định dạng dd/mm/yyyy
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -55,6 +59,7 @@ const OrderList = () => {
                     <TableHead sx={{ backgroundColor: '#3F5139' }}>
                         <TableRow>
                             <TableCell sx={{ color: '#f5f5f5' }}>STT</TableCell>
+                            <TableCell sx={{ color: '#f5f5f5' }}>Mã đơn hàng</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Người mua</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Tổng giá</TableCell>
                             <TableCell sx={{ color: '#f5f5f5' }}>Ngày tạo</TableCell>
@@ -70,26 +75,19 @@ const OrderList = () => {
                                 sx={{ cursor: 'pointer' }}
                             >
                                 <TableCell>{(page - 1) * pageSize + index + 1}</TableCell>
+                                <TableCell>{item.id}</TableCell>
                                 <TableCell>{item.customer.name}</TableCell>
                                 <TableCell>{item.orderPrice.toLocaleString()}đ</TableCell>
                                 <TableCell>{formatDate(item.date)}</TableCell>
                                 <TableCell>
                                     <Box
                                         sx={{
-                                            px: 2,
-                                            py: 0.5,
-                                            borderRadius: 2,
-                                            color: '#fff',
-                                            fontWeight: 500,
-                                            display: 'inline-block',
+                                            px: 2, py: 0.5, borderRadius: 2, color: '#fff',
+                                            fontWeight: 500, display: 'inline-block',
                                             bgcolor:
-                                                item.status === 'Completed'
-                                                    ? '#4CAF50'
-                                                    : item.status === 'Processing'
-                                                        ? '#FF9800'
-                                                        : item.status === 'Buy'
-                                                            ? '#2196F3'
-                                                            : '#9E9E9E',
+                                                item.status === 'Completed' ? '#4CAF50' :
+                                                    item.status === 'Processing' ? '#FF9800' :
+                                                        item.status === 'Buy' ? '#2196F3' : '#9E9E9E',
                                         }}
                                     >
                                         {item.status}
@@ -98,7 +96,6 @@ const OrderList = () => {
                             </TableRow>
                         ))}
                     </TableBody>
-
                 </Table>
             </TableContainer>
 

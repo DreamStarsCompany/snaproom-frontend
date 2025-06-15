@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Pagination,
+    Box, Table, TableBody, TableCell, TableContainer, TableHead,
+    TableRow, Paper, Pagination,
 } from '@mui/material';
 import { getAllOrdersAPI } from '../../services/UsersSevices';
 import { useNavigate } from 'react-router-dom';
 import { routes } from '../../routes';
 
-const OrderTable = () => {
+const OrderTable = ({ searchTerm, statusFilter }) => {
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [page, setPage] = useState(1);
@@ -25,7 +18,6 @@ const OrderTable = () => {
         const fetchData = async () => {
             try {
                 const res = await getAllOrdersAPI(page, pageSize);
-                console.log('Response:', res);
                 setOrders(res.items || []);
                 setTotalPages(res.totalPages || 1);
             } catch (err) {
@@ -36,17 +28,22 @@ const OrderTable = () => {
         fetchData();
     }, [page, pageSize]);
 
-
     const handleChangePage = (event, value) => {
         setPage(value);
     };
 
-    // Format ngày theo định dạng dd/mm/yyyy
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
         return date.toLocaleDateString('vi-VN');
     };
+
+    // Lọc đơn theo searchTerm và statusFilter
+    const filteredOrders = orders.filter(order => {
+        const matchSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchStatus = statusFilter === '' || order.status === statusFilter;
+        return matchSearch && matchStatus;
+    });
 
     return (
         <Box>
@@ -64,7 +61,7 @@ const OrderTable = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {orders.map((item, index) => (
+                        {filteredOrders.map((item, index) => (
                             <TableRow
                                 key={item.id}
                                 hover
@@ -80,20 +77,10 @@ const OrderTable = () => {
                                 <TableCell>
                                     <Box
                                         sx={{
-                                            px: 2,
-                                            py: 0.5,
-                                            borderRadius: 2,
-                                            color: '#fff',
-                                            fontWeight: 500,
-                                            display: 'inline-block',
-                                            bgcolor:
-                                                item.status === 'Completed'
-                                                    ? '#4CAF50'
-                                                    : item.status === 'Processing'
-                                                        ? '#FF9800'
-                                                        : item.status === 'Buy'
-                                                            ? '#2196F3'
-                                                            : '#9E9E9E',
+                                            px: 2, py: 0.5, borderRadius: 2, color: '#fff', fontWeight: 500, display: 'inline-block',
+                                            bgcolor: item.status === 'Completed' ? '#4CAF50'
+                                                : item.status === 'Processing' ? '#FF9800'
+                                                    : item.status === 'Buy' ? '#2196F3' : '#9E9E9E',
                                         }}
                                     >
                                         {item.status}
@@ -102,7 +89,6 @@ const OrderTable = () => {
                             </TableRow>
                         ))}
                     </TableBody>
-
                 </Table>
             </TableContainer>
 
