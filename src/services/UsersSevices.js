@@ -104,6 +104,22 @@ const updatePasswordAPI = async (password, newPassword) => {
 
 
 // =============Furniture============
+
+const updateFurnitureAPI = async (id, formData) => {
+  try {
+    const response = await instance.put(`/api/furnitures/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log('Update furniture success:', response);
+    return response;
+  } catch (error) {
+    console.error('Error updating furniture:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 const getAllFurnituresAPI = async (pageNumber = -1, pageSize = -1) => {
   try {
     const response = await instance.get('/api/furnitures', {
@@ -399,5 +415,6 @@ export {
   getNewProductsAPI,
   createNewProductAPI,
   createDesignAPI,
-  updateDesignAPI
+  updateDesignAPI,
+  updateFurnitureAPI
 };

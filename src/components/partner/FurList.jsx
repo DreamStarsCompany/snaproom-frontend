@@ -13,9 +13,12 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { routes } from '../../routes';
 import { getAllFursByDesAPI } from '../../services/UsersSevices';
+import { useNavigate } from 'react-router-dom';
 
 const FurList = ({ searchTerm }) => {
+  const navigate = useNavigate();
   const [allFurnitures, setAllFurnitures] = useState([]);
   const [filteredFurnitures, setFilteredFurnitures] = useState([]);
   const [page, setPage] = useState(1);
@@ -88,7 +91,7 @@ const FurList = ({ searchTerm }) => {
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.price.toLocaleString()}đ</TableCell>
                 <TableCell align="center">
-                  <IconButton color="primary" size="small">
+                  <IconButton color="primary" size="small" onClick={() => navigate(routes.furnitureDetail.replace(":id", item.id))}>
                     <EditIcon />
                   </IconButton>
                   <IconButton color="error" size="small">

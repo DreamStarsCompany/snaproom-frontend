@@ -14,7 +14,7 @@ export const routes = {
     adminUser: "/admin/user",
     adminWaiting: "/admin/waiting",
 
-    
+
     partnerDashboard: "/dashboard",
     designList: "/designs",
     furList: "/furnitures",
@@ -24,7 +24,7 @@ export const routes = {
     newFurniture: "/furniture/create",
     newDesign: "/design/create",
     waitList: "/waiting-list",
-    designDetail: "/design/detail/:id"
-
+    designDetail: "/design/detail/:id",
+    furnitureDetail: "/furniture/detail/:id"
 
 };
