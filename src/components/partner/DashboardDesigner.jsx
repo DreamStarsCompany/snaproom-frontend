@@ -42,29 +42,29 @@ const DashboardDesigner = () => {
 
   // Mock top sản phẩm bán chạy
   const productData = [
-    { name: 'Sản phẩm A', sales: 50, image: 'https://via.placeholder.com/50' },
-    { name: 'Sản phẩm B', sales: 45, image: 'https://via.placeholder.com/50' },
-    { name: 'Sản phẩm C', sales: 40, image: 'https://via.placeholder.com/50' },
-    { name: 'Sản phẩm D', sales: 35, image: 'https://via.placeholder.com/50' },
-    { name: 'Sản phẩm E', sales: 30, image: 'https://via.placeholder.com/50' },
+    { name: 'Ghế sofa mô-đun', sales: 50, image: 'https://via.placeholder.com/50' },
+    { name: 'Giường gỗ đen', sales: 45, image: 'https://via.placeholder.com/50' },
+    { name: 'Bàn cà phê gỗ Aspen', sales: 40, image: 'https://via.placeholder.com/50' },
+    { name: 'Thiết kế sang trọng', sales: 35, image: 'https://via.placeholder.com/50' },
+    { name: 'Kệ tường Arlo', sales: 30, image: 'https://via.placeholder.com/50' },
   ];
 
   const feedbackByProduct = {
-    'Sản phẩm A': [
+    'Ghế sofa mô-đun': [
       { id: 1, customer: 'Nguyễn Văn A', feedback: 'Sản phẩm rất tốt', image: 'https://via.placeholder.com/50' },
       { id: 2, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
       { id: 3, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
       { id: 4, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
       { id: 5, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
     ],
-    'Sản phẩm B': [
+    'Giường gỗ đen': [
       { id: 6, customer: 'Trần Thị C', feedback: 'Đóng gói cẩn thận', image: 'https://via.placeholder.com/50' },
       { id: 7, customer: 'Lê Văn D', feedback: 'Chất lượng tốt', image: 'https://via.placeholder.com/50' },
       { id: 8, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
       { id: 9, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
       { id: 10, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
     ],
-    'Sản phẩm C': [
+    'Bàn cà phê gỗ Aspen': [
       { id: 11, customer: 'Phạm Thị E', feedback: 'Giá hợp lý', image: 'https://via.placeholder.com/50' },
       { id: 12, customer: 'Đỗ Văn F', feedback: 'Sẽ ủng hộ tiếp', image: 'https://via.placeholder.com/50' },
       { id: 13, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },

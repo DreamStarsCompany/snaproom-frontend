@@ -68,16 +68,16 @@ const Dashboard = () => {
     }
   };
 
-  // Mock top sản phẩm bán chạy
+  // Top nhà thiết kế bán chạy
   const designerData = [
-    { name: 'Designer A', revenue: 12000000, image: 'https://via.placeholder.com/50' },
-    { name: 'Designer B', revenue: 11000000, image: 'https://via.placeholder.com/50' },
-    { name: 'Designer C', revenue: 9500000, image: 'https://via.placeholder.com/50' },
-    { name: 'Designer D', revenue: 8200000, image: 'https://via.placeholder.com/50' },
-    { name: 'Designer E', revenue: 7800000, image: 'https://via.placeholder.com/50' },
+    { name: 'Lin Dũ', revenue: 12000000, image: 'https://via.placeholder.com/50' },
+    { name: 'Lê Tris', revenue: 11000000, image: 'https://via.placeholder.com/50' },
+    { name: 'Nhu', revenue: 9500000, image: 'https://via.placeholder.com/50' },
+    // { name: 'Designer D', revenue: 8200000, image: 'https://via.placeholder.com/50' },
+    // { name: 'Designer E', revenue: 7800000, image: 'https://via.placeholder.com/50' },
   ];
 
-  // Mock trạng thái đơn hàng
+  // Trạng thái sản phẩm
   const statusData = [
     { name: 'Đã duyệt', value: 22 },
     { name: 'Chưa duyệt', value: 3 },
