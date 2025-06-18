@@ -5,19 +5,16 @@ import {
 } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { createFurnitureAPI, getAllCategoriesAPI } from '../../services/UsersSevices';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { createDesignAPI, getAllCategoriesAPI } from '../../services/UsersSevices';
+import { useNavigate } from 'react-router-dom';
 import { routes } from '../../routes';
 
-const CreateFurniture = () => {
-  const location = useLocation();
+const CreateDesign = () => {
   const navigate = useNavigate();
-  const [fromDesign, setFromDesign] = useState(false);
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
-  const [parentDesignId, setParentDesignId] = useState('');
   const [active, setActive] = useState(false);
   const [categoriesStyle1, setCategoriesStyle1] = useState([]);
   const [categoriesStyle0, setCategoriesStyle0] = useState([]);
@@ -27,15 +24,6 @@ const CreateFurniture = () => {
   const [images, setImages] = useState([]);
 
   const mainColor = '#3F5139';
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const designIdFromURL = params.get('designId');
-    if (designIdFromURL) {
-      setParentDesignId(designIdFromURL);
-      setFromDesign(true);
-    }
-  }, [location]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -57,7 +45,6 @@ const CreateFurniture = () => {
       formData.append('Name', name);
       formData.append('Price', price);
       formData.append('Description', description);
-      formData.append('ParentDesignId', parentDesignId || '');
       formData.append('Active', active);
       formData.append('StyleId', selectedStyleId);
       selectedCategoryIds.filter(id => id).forEach(id => {
@@ -70,11 +57,11 @@ const CreateFurniture = () => {
         formData.append('Images', image);
       });
 
-      await createFurnitureAPI(formData);
+      await createDesignAPI(formData);
       alert('Thêm nội thất thành công');
-      navigate(routes.furList);
+      navigate(routes.designList);
     } catch (error) {
-      console.error('Error creating furniture:', error);
+      console.error('Error creating design:', error);
       alert('Lỗi khi thêm: ' + (error.response?.data?.message || error.message));
     }
   };
@@ -113,7 +100,7 @@ const CreateFurniture = () => {
     <Paper elevation={3} sx={{ borderRadius: 3, maxWidth: 1200, mx: 'auto' }}>
       <Box sx={{ bgcolor: mainColor, p: 2, borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
         <Typography variant="h5" color="#fff" align="center" fontWeight={600}>
-          {fromDesign ? 'Thêm nội thất vào thiết kế' : 'Thêm nội thất'}
+          Thêm bản thiết
         </Typography>
       </Box>
 
@@ -121,7 +108,7 @@ const CreateFurniture = () => {
         {/* Dòng 1: Tên, Giá và Tình trạng */}
         <Box display="flex" gap={3} alignItems="center">
           <TextField
-            fullWidth label="Tên nội thất" value={name}
+            fullWidth label="Tên bản thiết kế" value={name}
             onChange={(e) => setName(e.target.value)} margin="normal" sx={textFieldStyles}
           />
           <TextField
@@ -150,19 +137,8 @@ const CreateFurniture = () => {
           onChange={(e) => setDescription(e.target.value)} margin="normal" sx={textFieldStyles}
         />
 
-        {/* Dòng 3: Thuộc thiết kế và Phong cách */}
+        {/* Dòng 3:Phong cách */}
         <Box display="flex" gap={3} alignItems="center" mt={2}>
-          {!parentDesignId && (
-            <TextField
-              fullWidth
-              label="Thuộc thiết kế"
-              value={parentDesignId}
-              onChange={(e) => setParentDesignId(e.target.value)}
-              margin="normal"
-              sx={{ display: 'none' }}
-            />
-          )}
-
           <FormControl fullWidth margin="normal" sx={selectStyles}>
             <InputLabel shrink>Phong cách</InputLabel>
             <Select
@@ -265,7 +241,7 @@ const CreateFurniture = () => {
           <Button
             variant="outlined"
             sx={{ borderColor: mainColor, color: mainColor, '&:hover': { backgroundColor: '#f0f0f0', borderColor: mainColor } }}
-            onClick={() => navigate(routes.furList)}
+            onClick={() => navigate(routes.designList)}
           >
             Hủy
           </Button>
@@ -283,4 +259,4 @@ const CreateFurniture = () => {
   );
 };
 
-export default CreateFurniture;
+export default CreateDesign;

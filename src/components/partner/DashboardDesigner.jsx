@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Card, Typography, Avatar, Stack, MenuItem, Select, FormControl } from '@mui/material';
+import { 
+  Box, 
+  Grid, 
+  Card, 
+  Typography,
+  Avatar, 
+  Stack, 
+  MenuItem, 
+  Select, 
+  FormControl } from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { getAllOrdersByDesAPI } from '../../services/UsersSevices';
+import {
+  getAllOrdersByDesAPI,
+  getNewProductsAPI
+} from '../../services/UsersSevices';
 import {
   LineChart,
   Line,
@@ -24,6 +36,7 @@ import {
 // import { Tooltip as MuiTooltip } from '@mui/material';
 
 const DashboardDesigner = () => {
+  const [totalItems, setTotalItems] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
@@ -51,25 +64,16 @@ const DashboardDesigner = () => {
 
   const feedbackByProduct = {
     'Ghế sofa mô-đun': [
-      { id: 1, customer: 'Nguyễn Văn A', feedback: 'Sản phẩm rất tốt', image: 'https://via.placeholder.com/50' },
-      { id: 2, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 3, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 4, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 5, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
+      { id: 1, customer: 'Phương Tuấn', feedback: 'Sản phẩm rất tốt', image: 'https://via.placeholder.com/50' },
+      { id: 2, customer: 'Leen', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
     ],
     'Giường gỗ đen': [
-      { id: 6, customer: 'Trần Thị C', feedback: 'Đóng gói cẩn thận', image: 'https://via.placeholder.com/50' },
-      { id: 7, customer: 'Lê Văn D', feedback: 'Chất lượng tốt', image: 'https://via.placeholder.com/50' },
-      { id: 8, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 9, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 10, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
+      { id: 3, customer: 'Phương Tuấn', feedback: 'Chất lượng tốt', image: 'https://via.placeholder.com/50' },
+      { id: 4, customer: 'Leen', feedback: 'Giá tiền phù hợp với chất lượng', image: 'https://via.placeholder.com/50' },
     ],
     'Bàn cà phê gỗ Aspen': [
-      { id: 11, customer: 'Phạm Thị E', feedback: 'Giá hợp lý', image: 'https://via.placeholder.com/50' },
-      { id: 12, customer: 'Đỗ Văn F', feedback: 'Sẽ ủng hộ tiếp', image: 'https://via.placeholder.com/50' },
-      { id: 13, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 14, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 15, customer: 'Hoàng Văn B', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
+      { id: 5, customer: 'Leen', feedback: 'Giá hợp lý', image: 'https://via.placeholder.com/50' },
+      { id: 6, customer: 'Phương Tuấn', feedback: 'Sẽ ủng hộ tiếp', image: 'https://via.placeholder.com/50' },
     ],
   };
 
@@ -83,6 +87,7 @@ const DashboardDesigner = () => {
 
   useEffect(() => {
     fetchOrders();
+    fetchWaiting();
   }, []);
 
   const fetchOrders = async () => {
@@ -97,6 +102,16 @@ const DashboardDesigner = () => {
     }
   };
 
+  const fetchWaiting = async () => {
+    try {
+      const res = await getNewProductsAPI();
+      const total = res?.totalItems ?? 0;
+      console.log("Total items:", total);
+      setTotalItems(total);
+    } catch (err) {
+      console.error('Error fetching total items:', err);
+    }
+  };
 
   return (
     <Box >
@@ -178,9 +193,9 @@ const DashboardDesigner = () => {
             </Box>
 
             <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
-              Tổng thời gian
+              Sản phẩm chờ
             </Typography>
-            <Typography variant="h4" fontWeight="bold" mt={1}>1,040</Typography>
+            <Typography variant="h4" fontWeight="bold" mt={1}>{totalItems}</Typography>
 
             <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
               <TrendingUpIcon sx={{ color: 'green', fontSize: 20 }} />
@@ -264,45 +279,45 @@ const DashboardDesigner = () => {
 
       {/* Danh sách feedback chia theo sản phẩm */}
       <Grid container spacing={2} mt={4}>
-  {Object.entries(feedbackByProduct).map(([productName, feedbacks]) => (
-    <Grid item xs={12} md={4} key={productName} sx={{ flex: 1 }}>
-      <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
-        <Typography variant="h6" fontWeight="bold" mb={2}>{productName}</Typography>
-        <Box
-          sx={{
-            maxHeight: 200,
-            overflowY: 'auto',
-            pr: 1, // thêm padding tránh sát mép phải
-            '&::-webkit-scrollbar': {
-              width: '6px',
-              display: 'none',
-            },
-            '&:hover::-webkit-scrollbar': {
-              display: 'block',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              backgroundColor: '#ccc',
-              borderRadius: '4px',
-            },
-            '&::-webkit-scrollbar-track': {
-              backgroundColor: '#f0f0f0',
-            },
-          }}
-        >
-          {feedbacks.map(feedback => (
-            <Box key={feedback.id} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Avatar src={feedback.image} alt={productName} sx={{ mr: 2 }} />
-              <Box>
-                <Typography variant="body2" color="textSecondary">Khách: {feedback.customer}</Typography>
-                <Typography variant="body2">{feedback.feedback}</Typography>
+        {Object.entries(feedbackByProduct).map(([productName, feedbacks]) => (
+          <Grid item xs={12} md={4} key={productName} sx={{ flex: 1 }}>
+            <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
+              <Typography variant="h6" fontWeight="bold" mb={2}>{productName}</Typography>
+              <Box
+                sx={{
+                  maxHeight: 200,
+                  overflowY: 'auto',
+                  pr: 1, // thêm padding tránh sát mép phải
+                  '&::-webkit-scrollbar': {
+                    width: '6px',
+                    display: 'none',
+                  },
+                  '&:hover::-webkit-scrollbar': {
+                    display: 'block',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: '#ccc',
+                    borderRadius: '4px',
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    backgroundColor: '#f0f0f0',
+                  },
+                }}
+              >
+                {feedbacks.map(feedback => (
+                  <Box key={feedback.id} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <Avatar src={feedback.image} alt={productName} sx={{ mr: 2 }} />
+                    <Box>
+                      <Typography variant="body2" color="textSecondary">Khách: {feedback.customer}</Typography>
+                      <Typography variant="body2">{feedback.feedback}</Typography>
+                    </Box>
+                  </Box>
+                ))}
               </Box>
-            </Box>
-          ))}
-        </Box>
-      </Card>
-    </Grid>
-  ))}
-</Grid>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
 
     </Box>
   );

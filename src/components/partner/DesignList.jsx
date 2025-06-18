@@ -13,23 +13,54 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { getAllDesignsByDesAPI } from '../../services/UsersSevices';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { getAllDesignsByDesAPI, getProductByIdAPI } from '../../services/UsersSevices';
+import { useNavigate } from 'react-router-dom';
+import FurniturePopup from './FurniturePopup';
+import { routes } from '../../routes';
 
 const DesignList = ({ searchTerm }) => {
+  const navigate = useNavigate();
   const [allDesigns, setAllDesigns] = useState([]);
   const [filteredDesigns, setFilteredDesigns] = useState([]);
   const [page, setPage] = useState(1);
   const pageSize = 6;
 
+  const [popupData, setPopupData] = useState({
+    open: false,
+    furnitures: [],
+  });
+
+  const handleViewFurnitures = async (designId) => {
+    try {
+      console.log('🔍 Getting product by ID:', designId);
+      const res = await getProductByIdAPI(designId);
+      console.log('Product detail:', res);
+
+      const furnitures = res?.furnitures || [];
+      if (furnitures.length === 0) {
+        console.warn('No furnitures found in product.');
+      } else {
+        console.log('Furnitures:', furnitures);
+      }
+
+      setPopupData({ open: true, furnitures });
+    } catch (err) {
+      console.error('Error loading furniture list:', err.response?.data || err.message);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getAllDesignsByDesAPI(); 
+        const res = await getAllDesignsByDesAPI();
         const items = res.data.items || [];
         setAllDesigns(items);
-        setFilteredDesigns(items); 
+        setFilteredDesigns(items);
+        console.log('Designs fetched:', items);
       } catch (err) {
-        console.error('Error fetching designs:', err);
+        console.error('Error fetching designs:', err.response?.data || err.message);
       }
     };
 
@@ -41,7 +72,7 @@ const DesignList = ({ searchTerm }) => {
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredDesigns(filtered);
-    setPage(1); // reset về trang 1 khi tìm kiếm
+    setPage(1);
   }, [searchTerm, allDesigns]);
 
   const totalPages = Math.ceil(filteredDesigns.length / pageSize);
@@ -49,10 +80,6 @@ const DesignList = ({ searchTerm }) => {
     (page - 1) * pageSize,
     page * pageSize
   );
-
-  const handleChangePage = (event, value) => {
-    setPage(value);
-  };
 
   return (
     <Box>
@@ -81,18 +108,31 @@ const DesignList = ({ searchTerm }) => {
                       height: 80,
                       objectFit: 'cover',
                       borderRadius: 1,
-                      display: 'block',
                     }}
                   />
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.price.toLocaleString()}đ</TableCell>
                 <TableCell align="center">
-                  <IconButton color="primary" size="small">
+                  <IconButton color="primary" size="small" onClick={() => navigate(routes.designDetail.replace(":id", item.id))}>
                     <EditIcon />
                   </IconButton>
                   <IconButton color="error" size="small">
                     <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    color="success"
+                    size="small"
+                    onClick={() => navigate(`/furniture/create?designId=${item.id}`)}
+                  >
+                    <AddBoxIcon />
+                  </IconButton>
+                  <IconButton
+                    color="info"
+                    size="small"
+                    onClick={() => handleViewFurnitures(item.id)}
+                  >
+                    <VisibilityIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -102,8 +142,14 @@ const DesignList = ({ searchTerm }) => {
       </TableContainer>
 
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-        <Pagination count={totalPages} page={page} onChange={handleChangePage} />
+        <Pagination count={totalPages} page={page} onChange={(e, val) => setPage(val)} />
       </Box>
+
+      <FurniturePopup
+        open={popupData.open}
+        onClose={() => setPopupData({ open: false, furnitures: [] })}
+        furnitures={popupData.furnitures}
+      />
     </Box>
   );
 };

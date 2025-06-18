@@ -187,6 +187,38 @@ const getAllDesignsByDesAPI = async (pageNumber = -1, pageSize = -1) => {
   }
 };
 
+const createDesignAPI = async (formData) => {
+  try {
+    const response = await instance.post('/api/designs', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log('Create design success:', response);
+    return response;
+  } catch (error) {
+    console.error('Error creating design:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+const updateDesignAPI = async (id, formData) => {
+  try {
+    const response = await instance.put(`/api/designs/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log('Update design success:', response);
+    return response;
+  } catch (error) {
+    console.error('Error updating design:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 // =============Order============
 
 const getAllOrdersByDesAPI = async (pageNumber = -1, pageSize = -1) => {
@@ -304,6 +336,18 @@ const getAllCategoriesAPI = async (style = null, pageNumber = -1, pageSize = -1)
 
 // =============Product============
 
+const getProductByIdAPI = async (id) => {
+  try {
+    const response = await instance.get(`/api/products/${id}`);
+    console.log('Get product by ID success:', response.data);
+    const data = response.data?.data || response.data; 
+    return data;
+  } catch (error) {
+    console.error('Error getting product by ID:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 const getNewProductsAPI = async (pageNumber = -1, pageSize = -1) => {
   try {
     const response = await instance.get('/api/products/new', {
@@ -334,6 +378,7 @@ const createNewProductAPI = async (id) => {
 };
 
 export {
+  getProductByIdAPI,
   loginDesignerAPI,
   getAllFurnituresAPI,
   getAllDesignsAPI,
@@ -352,5 +397,7 @@ export {
   createFurnitureAPI,
   getAllCategoriesAPI,
   getNewProductsAPI,
-  createNewProductAPI
+  createNewProductAPI,
+  createDesignAPI,
+  updateDesignAPI
 };

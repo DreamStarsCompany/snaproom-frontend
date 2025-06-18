@@ -22,6 +22,9 @@ export const routes = {
     orderDetail: "/orders/:orderId",
     profile: "profile",
     newFurniture: "/furniture/create",
-    waitList: "/waiting-list"
+    newDesign: "/design/create",
+    waitList: "/waiting-list",
+    designDetail: "/design/detail/:id"
+
 
 };
