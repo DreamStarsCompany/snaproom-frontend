@@ -393,7 +393,25 @@ const createNewProductAPI = async (id) => {
   }
 };
 
+
+// ==================Dashboard==================
+
+const getRevenueByDayAPI = async (month, year) => {
+  try {
+    const response = await instance.get('/api/dashboard/revenue-by-day', {
+      params: { month, year },
+    });
+    console.log('Revenue data:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching revenue by day:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 export {
+  getRevenueByDayAPI,
   getProductByIdAPI,
   loginDesignerAPI,
   getAllFurnituresAPI,

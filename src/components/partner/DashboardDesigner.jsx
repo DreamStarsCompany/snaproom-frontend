@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Box, 
-  Grid, 
-  Card, 
+import {
+  Box,
+  Grid,
+  Card,
   Typography,
-  Avatar, 
-  Stack, 
-  MenuItem, 
-  Select, 
-  FormControl } from '@mui/material';
+  Avatar,
+  Stack,
+  MenuItem,
+  Select,
+  FormControl
+} from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -17,7 +18,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
   getAllOrdersByDesAPI,
-  getNewProductsAPI
+  getNewProductsAPI,
 } from '../../services/UsersSevices';
 import {
   LineChart,
@@ -36,6 +37,7 @@ import {
 // import { Tooltip as MuiTooltip } from '@mui/material';
 
 const DashboardDesigner = () => {
+  const [orderTotalRevenue, setOrderTotalRevenue] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalCustomers, setTotalCustomers] = useState(0);
@@ -66,14 +68,21 @@ const DashboardDesigner = () => {
     'Ghế sofa mô-đun': [
       { id: 1, customer: 'Phương Tuấn', feedback: 'Sản phẩm rất tốt', image: 'https://via.placeholder.com/50' },
       { id: 2, customer: 'Leen', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-    ],
-    'Giường gỗ đen': [
-      { id: 3, customer: 'Phương Tuấn', feedback: 'Chất lượng tốt', image: 'https://via.placeholder.com/50' },
+      { id: 3, customer: 'Leen', feedback: 'Good job', image: 'https://via.placeholder.com/50' },
       { id: 4, customer: 'Leen', feedback: 'Giá tiền phù hợp với chất lượng', image: 'https://via.placeholder.com/50' },
     ],
+    'Giường Orion': [
+      { id: 5, customer: 'Phương Tuấn', feedback: 'Chất lượng tốt', image: 'https://via.placeholder.com/50' },
+      { id: 6, customer: 'Leen', feedback: 'Giá tiền phù hợp với chất lượng', image: 'https://via.placeholder.com/50' },
+      { id: 7, customer: 'Leen', feedback: 'Amazing', image: 'https://via.placeholder.com/50' },
+      { id: 8, customer: 'Leen', feedback: 'Tuyệt vời', image: 'https://via.placeholder.com/50' },
+    ],
     'Bàn cà phê gỗ Aspen': [
-      { id: 5, customer: 'Leen', feedback: 'Giá hợp lý', image: 'https://via.placeholder.com/50' },
-      { id: 6, customer: 'Phương Tuấn', feedback: 'Sẽ ủng hộ tiếp', image: 'https://via.placeholder.com/50' },
+      { id: 9, customer: 'Leen', feedback: 'Giá hợp lý', image: 'https://via.placeholder.com/50' },
+      { id: 10, customer: 'Phương Tuấn', feedback: 'Sẽ ủng hộ tiếp', image: 'https://via.placeholder.com/50' },
+      { id: 11, customer: 'Phương Tuấn', feedback: 'Đồ tốt', image: 'https://via.placeholder.com/50' },
+      { id: 12, customer: 'Phương Tuấn', feedback: 'Test', image: 'https://via.placeholder.com/50' },
+      { id: 13, customer: 'Phương Tuấn', feedback: 'Không bao giờ mua lại', image: 'https://via.placeholder.com/50' },
     ],
   };
 
@@ -85,9 +94,21 @@ const DashboardDesigner = () => {
     { name: 'Completed', value: 60 },
   ];
 
+  const fetchTotalRevenueFromOrders = async () => {
+    try {
+      const res = await getAllOrdersByDesAPI();
+      const orders = res?.items || [];
+      const total = orders.reduce((sum, order) => sum + (order.orderPrice || 0), 0);
+      setOrderTotalRevenue(total);
+    } catch (err) {
+      console.error('Lỗi khi tính tổng doanh thu từ đơn hàng:', err);
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
     fetchWaiting();
+    fetchTotalRevenueFromOrders();
   }, []);
 
   const fetchOrders = async () => {
@@ -173,7 +194,13 @@ const DashboardDesigner = () => {
             <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
               Tổng doanh thu
             </Typography>
-            <Typography variant="h4" fontWeight="bold" mt={1}>43.9M VNĐ</Typography>
+            <Typography variant="h4" fontWeight="bold" mt={1}>
+              {(orderTotalRevenue % 1000000 === 0
+                ? (orderTotalRevenue / 1000000).toFixed(0)
+                : (orderTotalRevenue / 1000000).toFixed(2)
+              ) + "M VNĐ"
+              }
+            </Typography>
 
             <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
               <TrendingDownIcon sx={{ color: 'red', fontSize: 20 }} />

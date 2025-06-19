@@ -6,7 +6,12 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { getAllAccountsAPI, getNewProductsAPI } from '../../services/UsersSevices';
+import {
+  getAllAccountsAPI,
+  getNewProductsAPI,
+  getRevenueByDayAPI,
+  getAllOrdersAPI
+} from '../../services/UsersSevices';
 import {
   LineChart,
   Line,
@@ -20,31 +25,74 @@ import {
   PieChart,
   Pie,
   Cell,
-  AreaChart,  
+  AreaChart,
   Area
 } from 'recharts';
 // import { Tooltip as MuiTooltip } from '@mui/material';
 
 const Dashboard = () => {
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [orderTotalRevenue, setOrderTotalRevenue] = useState(0);
+  const currentYear = new Date().getFullYear();
+
+  const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear());
+
+  const [revenueData, setRevenueData] = useState([]);
   const [totalDesigners, setTotalDesigners] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
 
   const COLORS = ['#0088FE', '#FFBB28', '#00C49F'];
 
-  const mockRevenueData = Array.from({ length: 30 }, (_, i) => ({
-    day: i + 1,
-    revenue: Math.floor(Math.random() * 5000000) + 1000000, // random 1tr-5tr
-  }));
+  useEffect(() => {
+    if (selectedMonth && selectedYear) {
+      fetchRevenueData(selectedMonth, selectedYear);
+    }
+  }, [selectedMonth, selectedYear]);
+
+  const fetchRevenueData = async (month, year) => {
+    try {
+      console.log("Fetching data for:", month, year);
+      const res = await getRevenueByDayAPI(month, year);
+      console.log("Revenue data from API:", res);
+
+      const rawData = res || [];
+      console.log("Raw revenue data:", rawData);
+
+      const cleanData = rawData.map(item => ({
+        day: Number(item.day),
+        revenue: Number(item.revenue),
+      }));
+      console.log("Clean revenue data:", cleanData);
+
+      setRevenueData(cleanData);
+    } catch (err) {
+      console.error('Lỗi khi lấy doanh thu theo ngày:', err);
+    }
+  };
+
+  const fetchTotalRevenueFromOrders = async () => {
+    try {
+      const res = await getAllOrdersAPI(); 
+      const orders = res?.items || []; 
+      const total = orders.reduce((sum, order) => sum + (order.orderPrice || 0), 0);
+      setOrderTotalRevenue(total);
+    } catch (err) {
+      console.error('Lỗi khi tính tổng doanh thu từ đơn hàng:', err);
+    }
+  };
 
   const handleMonthChange = (event) => {
     setSelectedMonth(event.target.value);
-    // Sau này khi có API fetch data ở đây theo tháng
+  };
+
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
   };
 
   useEffect(() => {
     fetchAccounts();
     fetchData();
+    fetchTotalRevenueFromOrders();
   }, []);
 
   const fetchAccounts = async () => {
@@ -184,7 +232,14 @@ const Dashboard = () => {
             <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
               Tổng doanh thu
             </Typography>
-            <Typography variant="h4" fontWeight="bold" mt={1}>48.2M VNĐ</Typography>
+            <Typography variant="h4" fontWeight="bold" mt={1}>
+              {(orderTotalRevenue % 1000000 === 0
+                ? (orderTotalRevenue / 1000000).toFixed(0)
+                : (orderTotalRevenue / 1000000).toFixed(2)
+              ) + "M VNĐ"
+              }
+            </Typography>
+
 
             <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
               <TrendingDownIcon sx={{ color: 'red', fontSize: 20 }} />
@@ -200,17 +255,27 @@ const Dashboard = () => {
       <Card sx={{ mt: 4, p: 3, borderRadius: 3, boxShadow: 2 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={5}>
           <Typography variant="h6" fontWeight="bold">Doanh thu theo ngày trong tháng</Typography>
-          <FormControl size="small" sx={{ minWidth: 120 }}>
-            <Select value={selectedMonth} onChange={handleMonthChange}>
-              {[...Array(12).keys()].map(i => (
-                <MenuItem key={i + 1} value={i + 1}>{`Tháng ${i + 1}`}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Stack direction="row" spacing={2}>
+            <FormControl size="small" sx={{ minWidth: 120 }}>
+              <Select value={selectedMonth} onChange={handleMonthChange}>
+                {[...Array(12).keys()].map(i => (
+                  <MenuItem key={i + 1} value={i + 1}>{`Tháng ${i + 1}`}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl size="small" sx={{ minWidth: 100 }}>
+              <Select value={selectedYear} onChange={handleYearChange}>
+                {[currentYear - 2, currentYear - 1, currentYear].map(year => (
+                  <MenuItem key={year} value={year}>{year}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Stack>
         </Box>
+
         <Box sx={{ height: 300 }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={mockRevenueData}>
+            <LineChart data={revenueData}>
               <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
               <XAxis dataKey="day" />
               <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} />
