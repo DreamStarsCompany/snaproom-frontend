@@ -15,7 +15,6 @@ import WeekendIcon from '@mui/icons-material/Weekend';
 import BrushIcon from '@mui/icons-material/Brush';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import PeopleIcon from '@mui/icons-material/People';
-import ChatIcon from '@mui/icons-material/Chat';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logoGreen from '../../assets/image/logo_green.png';
@@ -28,7 +27,6 @@ const menuItems = [
   { text: 'Đơn hàng', icon: <ListAltIcon />, route: 'adminOrder' },
   { text: 'Người dùng', icon: <PeopleIcon />, route: 'adminUser' },
   { text: 'Sản phẩm chờ', icon: <HourglassTopIcon />, route: 'adminWaiting' },
-  { text: 'Trò chuyện', icon: <ChatIcon />, route: '#' },
 ];
 
 const bottomItems = [

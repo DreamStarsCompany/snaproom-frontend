@@ -10,7 +10,10 @@ import {
   getAllAccountsAPI,
   getNewProductsAPI,
   getRevenueByDayAPI,
-  getAllOrdersAPI
+  getAllOrdersAPI,
+  getTopDesignersByRevenueAPI,
+  getOrderStatusByMonthAPI,
+  getCustomerGrowthAPI,
 } from '../../services/UsersSevices';
 import {
   LineChart,
@@ -22,11 +25,9 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
   AreaChart,
-  Area
+  Area,
+  Legend
 } from 'recharts';
 // import { Tooltip as MuiTooltip } from '@mui/material';
 
@@ -37,11 +38,12 @@ const Dashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear());
 
+  const [userGrowthData, setUserGrowthData] = useState([]);
+  const [orderSystemData, setOrderSystemData] = useState([]);
+  const [designerData, setDesignerData] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
   const [totalDesigners, setTotalDesigners] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
-
-  const COLORS = ['#0088FE', '#FFBB28', '#00C49F'];
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
@@ -70,14 +72,65 @@ const Dashboard = () => {
     }
   };
 
+  const fetchTopDesigners = async () => {
+    try {
+      const res = await getTopDesignersByRevenueAPI(5);
+      const data = res || [];
+      console.log("Top designers raw data:", data);
+
+      const transformedData = data.map(designer => ({
+        name: designer.accountName,
+        revenue: designer.totalIncome,
+      }));
+
+      setDesignerData(transformedData);
+    } catch (err) {
+      console.error("Lỗi khi lấy top nhà thiết kế:", err);
+    }
+  };
+
   const fetchTotalRevenueFromOrders = async () => {
     try {
-      const res = await getAllOrdersAPI(); 
-      const orders = res?.items || []; 
+      const res = await getAllOrdersAPI();
+      const orders = res?.items || [];
       const total = orders.reduce((sum, order) => sum + (order.orderPrice || 0), 0);
       setOrderTotalRevenue(total);
     } catch (err) {
       console.error('Lỗi khi tính tổng doanh thu từ đơn hàng:', err);
+    }
+  };
+
+  const fetchOrderSystemData = async () => {
+    try {
+      const res = await getOrderStatusByMonthAPI();
+      const rawData = res || [];
+
+      const formatted = rawData.map(item => ({
+        name: `Tháng ${item.month}`,
+        processing: item.processing,
+        delivered: item.delivered,
+        cancelled: item.cancelled,
+      }));
+
+      setOrderSystemData(formatted);
+    } catch (err) {
+      console.error('Lỗi khi lấy dữ liệu đơn hàng hệ thống:', err);
+    }
+  };
+
+  const fetchCustomerGrowth = async () => {
+    try {
+      const res = await getCustomerGrowthAPI();
+      const rawData = res || [];
+
+      const formatted = rawData.map(item => ({
+        name: `Tháng ${item.month}`,
+        count: item.count,
+      }));
+
+      setUserGrowthData(formatted);
+    } catch (err) {
+      console.error('Lỗi khi lấy dữ liệu tăng trưởng khách hàng:', err);
     }
   };
 
@@ -92,7 +145,10 @@ const Dashboard = () => {
   useEffect(() => {
     fetchAccounts();
     fetchData();
+    fetchTopDesigners();
     fetchTotalRevenueFromOrders();
+    fetchOrderSystemData();
+    fetchCustomerGrowth();
   }, []);
 
   const fetchAccounts = async () => {
@@ -115,40 +171,6 @@ const Dashboard = () => {
       console.error('Error fetching products:', err);
     }
   };
-
-  // Top nhà thiết kế bán chạy
-  const designerData = [
-    { name: 'Lin Dũ', revenue: 12000000, image: 'https://via.placeholder.com/50' },
-    { name: 'Lê Tris', revenue: 11000000, image: 'https://via.placeholder.com/50' },
-    { name: 'Nhu', revenue: 9500000, image: 'https://via.placeholder.com/50' },
-    // { name: 'Designer D', revenue: 8200000, image: 'https://via.placeholder.com/50' },
-    // { name: 'Designer E', revenue: 7800000, image: 'https://via.placeholder.com/50' },
-  ];
-
-  // Trạng thái sản phẩm
-  const statusData = [
-    { name: 'Đã duyệt', value: 22 },
-    { name: 'Chưa duyệt', value: 3 },
-  ];
-
-  const orderSystemData = [
-    { name: 'Tháng 1', completed: 120, pending: 30 },
-    { name: 'Tháng 2', completed: 150, pending: 20 },
-    { name: 'Tháng 3', completed: 100, pending: 40 },
-    { name: 'Tháng 4', completed: 180, pending: 15 },
-    { name: 'Tháng 5', completed: 140, pending: 25 },
-  ];
-
-  // Mock user growth data
-  const userGrowthData = [
-    { month: 'Tháng 1', users: 120 },
-    { month: 'Tháng 2', users: 150 },
-    { month: 'Tháng 3', users: 200 },
-    { month: 'Tháng 4', users: 250 },
-    { month: 'Tháng 5', users: 300 },
-    { month: 'Tháng 6', users: 350 },
-  ];
-
 
   return (
     <Box >
@@ -279,7 +301,9 @@ const Dashboard = () => {
               <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
               <XAxis dataKey="day" />
               <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} />
-              <Tooltip formatter={(value) => `${value.toLocaleString()} VNĐ`} />
+              <Tooltip
+                formatter={(value) => [`${value.toLocaleString()} VNĐ`, 'Doanh thu']}
+              />
               <Line type="monotone" dataKey="revenue" stroke="#89B9AD" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
@@ -288,47 +312,20 @@ const Dashboard = () => {
 
       {/* Phần biểu đồ ngang gồm 2 biểu đồ BarChart và Donut Chart */}
       <Grid container spacing={2} mt={4}>
-        {/* Bar chart top 5 sản phẩm */}
         {/* Bar chart top 5 nhà thiết kế doanh thu cao */}
         <Grid item xs={12} md={6} sx={{ flex: 1 }}>
           <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
-            <Typography variant="h6" fontWeight="bold" mb={2}>Top 5 nhà thiết kế doanh thu cao</Typography>
+            <Typography variant="h6" fontWeight="bold" mb={2}>Top nhà thiết kế doanh thu cao</Typography>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={designerData} layout="vertical" margin={{ top: 20, right: 20, left: 18, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" height={20} tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} axisLine={false} tickLine={false} />
                 <YAxis dataKey="name" type="category" />
-                <Tooltip formatter={(value) => `${value.toLocaleString()} VNĐ`} />
+                <Tooltip
+                  formatter={(value) => [`${value.toLocaleString()} VNĐ`, 'Doanh thu']}
+                />
                 <Bar dataKey="revenue" fill="#4DA8DA" barSize={25} />
               </BarChart>
-            </ResponsiveContainer>
-          </Card>
-        </Grid>
-
-        {/* Donut chart trạng thái đơn hàng */}
-        <Grid item xs={12} md={6} sx={{ flex: 0.5 }}>
-          <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
-            <Typography variant="h6" fontWeight="bold" mb={2}>Trạng thái đơn hàng</Typography>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={statusData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={100}
-                  innerRadius={60}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  startAngle={90}
-                  endAngle={-270}
-                >
-                  {statusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
             </ResponsiveContainer>
           </Card>
         </Grid>
@@ -336,15 +333,19 @@ const Dashboard = () => {
 
       {/* Stacked Bar chart đơn hàng toàn hệ thống */}
       <Card sx={{ mt: 4, p: 3, borderRadius: 3, boxShadow: 2 }}>
-        <Typography variant="h6" fontWeight="bold" mb={2}>Đơn hàng toàn hệ thống</Typography>
+        <Typography variant="h6" fontWeight="bold" mb={2}>
+          Đơn hàng toàn hệ thống theo tháng
+        </Typography>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={orderSystemData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="completed" stackId="a" fill="#84AE92" name="Hoàn thành" />
-            <Bar dataKey="pending" stackId="a" fill="#FFD586" name="Chưa hoàn thành" />
+            <YAxis allowDecimals={false} />
+            <Tooltip formatter={(value) => `${value} đơn`} />
+            <Legend />
+            <Bar dataKey="processing" fill="#FFD586" name="Đang xử lý" />
+            <Bar dataKey="delivered" fill="#84AE92" name="Đã giao" />
+            <Bar dataKey="cancelled" fill="#FF9E9E" name="Đã huỷ" />
           </BarChart>
         </ResponsiveContainer>
       </Card>
@@ -360,10 +361,17 @@ const Dashboard = () => {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
+            <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Area type="monotone" dataKey="users" stroke="#8884d8" fillOpacity={1} fill="url(#colorUsers)" name="Người dùng" />
+            <Area
+              type="monotone"
+              dataKey="count"
+              stroke="#8884d8"
+              fillOpacity={1}
+              fill="url(#colorUsers)"
+              name="Người dùng"
+            />
           </AreaChart>
         </ResponsiveContainer>
       </Card>

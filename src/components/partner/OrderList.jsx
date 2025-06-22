@@ -52,6 +52,23 @@ const OrderList = ({ searchTerm, statusFilter }) => {
         return date.toLocaleDateString('vi-VN');
     };
 
+    const statusColorMap = {
+        Pending: "#9E9E9E",
+        Processing: "#FF9800",
+        Delivered: "#347433",
+        Refunded: "#FF6F3C",
+        Cancelled: "#B22222",
+    };
+
+    const statusLabelMap = {
+        Pending: "Chờ xác nhận",
+        Processing: "Đang xử lý",
+        Delivered: "Đã giao hàng",
+        Refunded: "Hoàn tiền",
+        Cancelled: "Đã hủy",
+    };
+
+
     return (
         <Box>
             <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
@@ -82,16 +99,18 @@ const OrderList = ({ searchTerm, statusFilter }) => {
                                 <TableCell>
                                     <Box
                                         sx={{
-                                            px: 2, py: 0.5, borderRadius: 2, color: '#fff',
-                                            fontWeight: 500, display: 'inline-block',
-                                            bgcolor:
-                                                item.status === 'Completed' ? '#4CAF50' :
-                                                    item.status === 'Processing' ? '#FF9800' :
-                                                        item.status === 'Buy' ? '#2196F3' : '#9E9E9E',
+                                            px: 2,
+                                            py: 0.5,
+                                            borderRadius: 2,
+                                            color: "#fff",
+                                            fontWeight: 500,
+                                            display: "inline-block",
+                                            bgcolor: statusColorMap[item.status] || "#F5F5F5",
                                         }}
                                     >
-                                        {item.status}
+                                        {statusLabelMap[item.status] || "Không xác định"}
                                     </Box>
+
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -107,3 +126,5 @@ const OrderList = ({ searchTerm, statusFilter }) => {
 };
 
 export default OrderList;
+
+

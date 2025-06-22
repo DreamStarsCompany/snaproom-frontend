@@ -41,10 +41,8 @@ const forgetPasswordAPI = async (email, role) => {
         role,
       },
     });
-    console.log('Forgot password request success:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Forgot password error:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -70,7 +68,7 @@ const applicationResultAPI = async (email, isApproved) => {
   try {
     const response = await instance.post(
       `/api/auth/application-result`,
-      {}, // Request body rỗng
+      {}, 
       {
         params: {
           email: email,
@@ -266,10 +264,10 @@ const getAllOrdersAPI = async (pageNumber = -1, pageSize = -1) => {
     const response = await instance.get('/api/orders', {
       params: { pageNumber, pageSize },
     });
-    console.log('Get all orders by designer success:', response.data);
+    console.log('Get all orders by success:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error getting orders by designer:', error);
+    console.error('Error getting orders :', error);
     throw error;
   }
 };
@@ -401,16 +399,119 @@ const getRevenueByDayAPI = async (month, year) => {
     const response = await instance.get('/api/dashboard/revenue-by-day', {
       params: { month, year },
     });
-    console.log('Revenue data:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching revenue by day:', error.response?.data || error.message);
     throw error;
+  }
+};
+
+const getDesignerRevenueByDayAPI = async (month, year) => {
+  try {
+    const response = await instance.get('/api/dashboard/designer/revenue-by-day', {
+      params: { month, year },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getTopDesignersByRevenueAPI = async (topN = 5) => {
+  try {
+    const response = await instance.get('/api/dashboard/top-designers-by-revenue', {
+      params: { topN }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getOrderStatusByMonthAPI = async () => {
+  try {
+    const response = await instance.get('/api/dashboard/orders');
+    return response.data; 
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getCustomerGrowthAPI = async () => {
+  try {
+    const response = await instance.get('/api/dashboard/user-growth');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getTopProductsAPI = async () => {
+  try {
+    const response = await instance.get('/api/dashboard/top-products');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getTopProductsWithReviewsAPI = async () => {
+  try {
+    const response = await instance.get('/api/dashboard/top-products-reviews');
+    
+    if (Array.isArray(response.data?.data)) {
+      return response.data.data;
+    }
+
+    if (Array.isArray(response.data)) {
+      return response.data;
+    }
+
+    if (Array.isArray(response)) {
+      return response;
+    }
+
+    return [];
+  } catch (error) {
+    return [];
+  }
+};
+
+// ==================Conversations==================
+
+const getAllConversationsAPI = async () => {
+  try {
+    const response = await instance.get(`/api/conversations`);
+    console.log("Raw conversation API response:", response);
+    if (Array.isArray(response)) return response;
+    if (Array.isArray(response?.data)) return response.data;
+    return [];
+  } catch (error) {
+    console.error("Failed to fetch conversations:", error);
+    return [];
+  }
+};
+
+const getConversationByIdAPI = async (id) => {
+  try {
+    const response = await instance.get(`/api/conversations/${id}`);
+    console.log('Messages in conversation:', response);
+    return response;
+  } catch (error) {
+    console.error('Error getting conversation by ID:', error);
+    return [];
   }
 };
 
 
 export {
+  getAllConversationsAPI,
+  getConversationByIdAPI,
+  getTopProductsWithReviewsAPI,
+  getTopProductsAPI,
+  getDesignerRevenueByDayAPI,
+  getCustomerGrowthAPI,
+  getOrderStatusByMonthAPI,
+  getTopDesignersByRevenueAPI,
   getRevenueByDayAPI,
   getProductByIdAPI,
   loginDesignerAPI,

@@ -14,7 +14,7 @@ export const routes = {
     adminUser: "/admin/user",
     adminWaiting: "/admin/waiting",
 
-
+    chat: "/chat",
     partnerDashboard: "/dashboard",
     designList: "/designs",
     furList: "/furnitures",

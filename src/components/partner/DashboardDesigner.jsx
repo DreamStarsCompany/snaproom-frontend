@@ -19,6 +19,9 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import {
   getAllOrdersByDesAPI,
   getNewProductsAPI,
+  getDesignerRevenueByDayAPI,
+  getTopProductsAPI,
+  getTopProductsWithReviewsAPI
 } from '../../services/UsersSevices';
 import {
   LineChart,
@@ -32,67 +35,111 @@ import {
   Bar,
   PieChart,
   Pie,
-  Cell
+  Cell,
 } from 'recharts';
-// import { Tooltip as MuiTooltip } from '@mui/material';
+
+const statusColorMap = {
+  Pending: "#9E9E9E",
+  Processing: "#FF9800",
+  Delivered: "#347433",
+  Refunded: "#FF6F3C",
+  Cancelled: "#B22222",
+};
+
+const statusLabelMap = {
+  Pending: "Chờ xác nhận",
+  Processing: "Đang xử lý",
+  Delivered: "Đã giao hàng",
+  Refunded: "Hoàn tiền",
+  Cancelled: "Đã hủy",
+};
 
 const DashboardDesigner = () => {
+  const [orderStatusData, setOrderStatusData] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
+  const [topReviewedProducts, setTopReviewedProducts] = useState([]);
+
+
   const [orderTotalRevenue, setOrderTotalRevenue] = useState(0);
+  const currentYear = new Date().getFullYear();
+
+  const [selectedMonth, setSelectedMonth] = useState(() => new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear());
   const [totalItems, setTotalItems] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
+  const [revenueData, setRevenueData] = useState([]);
   const [totalCustomers, setTotalCustomers] = useState(0);
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
 
-  const COLORS = ['#0088FE', '#FFBB28', '#00C49F'];
+  const fetchOrders = async () => {
+    try {
+      const response = await getAllOrdersByDesAPI();
+      const items = response.items || [];
 
-  const mockRevenueData = Array.from({ length: 30 }, (_, i) => ({
-    day: i + 1,
-    revenue: Math.floor(Math.random() * 5000000) + 1000000, // random 1tr-5tr
-  }));
+      // Tổng đơn
+      setTotalOrders(response.totalItems || 0);
+
+      // Tổng khách hàng
+      const uniqueCustomers = [...new Set(items.map(order => order.customer?.name))];
+      setTotalCustomers(uniqueCustomers.length);
+
+      // Đếm theo trạng thái
+      const statusCount = items.reduce((acc, order) => {
+        const status = order.status;
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Convert sang mảng cho PieChart
+      const formattedStatusData = Object.entries(statusCount).map(([status, value]) => ({
+        name: statusLabelMap[status] || status,
+        value,
+        rawStatus: status,
+      }));
+      setOrderStatusData(formattedStatusData);
+
+    } catch (err) {
+      console.error('Error fetching orders:', err);
+    }
+  };
+
+  const fetchRevenueData = async (month, year) => {
+    try {
+      const res = await getDesignerRevenueByDayAPI(month, year);
+
+      const rawData = res || [];
+
+      const cleanData = rawData.map(item => ({
+        day: Number(item.day),
+        revenue: Number(item.revenue),
+      }));
+
+      setRevenueData(cleanData);
+    } catch (err) {
+    }
+  };
 
   const handleMonthChange = (event) => {
     setSelectedMonth(event.target.value);
-    // Sau này khi có API fetch data ở đây theo tháng
   };
 
-  // Mock top sản phẩm bán chạy
-  const productData = [
-    { name: 'Ghế sofa mô-đun', sales: 50, image: 'https://via.placeholder.com/50' },
-    { name: 'Giường gỗ đen', sales: 45, image: 'https://via.placeholder.com/50' },
-    { name: 'Bàn cà phê gỗ Aspen', sales: 40, image: 'https://via.placeholder.com/50' },
-    { name: 'Thiết kế sang trọng', sales: 35, image: 'https://via.placeholder.com/50' },
-    { name: 'Kệ tường Arlo', sales: 30, image: 'https://via.placeholder.com/50' },
-  ];
-
-  const feedbackByProduct = {
-    'Ghế sofa mô-đun': [
-      { id: 1, customer: 'Phương Tuấn', feedback: 'Sản phẩm rất tốt', image: 'https://via.placeholder.com/50' },
-      { id: 2, customer: 'Leen', feedback: 'Giao hàng đúng hẹn', image: 'https://via.placeholder.com/50' },
-      { id: 3, customer: 'Leen', feedback: 'Good job', image: 'https://via.placeholder.com/50' },
-      { id: 4, customer: 'Leen', feedback: 'Giá tiền phù hợp với chất lượng', image: 'https://via.placeholder.com/50' },
-    ],
-    'Giường Orion': [
-      { id: 5, customer: 'Phương Tuấn', feedback: 'Chất lượng tốt', image: 'https://via.placeholder.com/50' },
-      { id: 6, customer: 'Leen', feedback: 'Giá tiền phù hợp với chất lượng', image: 'https://via.placeholder.com/50' },
-      { id: 7, customer: 'Leen', feedback: 'Amazing', image: 'https://via.placeholder.com/50' },
-      { id: 8, customer: 'Leen', feedback: 'Tuyệt vời', image: 'https://via.placeholder.com/50' },
-    ],
-    'Bàn cà phê gỗ Aspen': [
-      { id: 9, customer: 'Leen', feedback: 'Giá hợp lý', image: 'https://via.placeholder.com/50' },
-      { id: 10, customer: 'Phương Tuấn', feedback: 'Sẽ ủng hộ tiếp', image: 'https://via.placeholder.com/50' },
-      { id: 11, customer: 'Phương Tuấn', feedback: 'Đồ tốt', image: 'https://via.placeholder.com/50' },
-      { id: 12, customer: 'Phương Tuấn', feedback: 'Test', image: 'https://via.placeholder.com/50' },
-      { id: 13, customer: 'Phương Tuấn', feedback: 'Không bao giờ mua lại', image: 'https://via.placeholder.com/50' },
-    ],
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
   };
 
+  const fetchTopProducts = async () => {
+    try {
+      const res = await getTopProductsAPI();
+      const products = res || [];
 
-  // Mock trạng thái đơn hàng
-  const statusData = [
-    { name: 'Buy', value: 15 },
-    { name: 'Processing', value: 25 },
-    { name: 'Completed', value: 60 },
-  ];
+      const chartData = products.map(p => ({
+        name: p.productName,
+        sales: p.quantitySold,
+      }));
+
+      setTopProducts(chartData);
+    } catch (err) {
+    }
+  };
 
   const fetchTotalRevenueFromOrders = async () => {
     try {
@@ -101,27 +148,40 @@ const DashboardDesigner = () => {
       const total = orders.reduce((sum, order) => sum + (order.orderPrice || 0), 0);
       setOrderTotalRevenue(total);
     } catch (err) {
-      console.error('Lỗi khi tính tổng doanh thu từ đơn hàng:', err);
+    }
+  };
+
+  const fetchTopReviewedProducts = async () => {
+    try {
+      const result = await getTopProductsWithReviewsAPI();
+
+      if (Array.isArray(result)) {
+        console.log("Valid data, setting state...");
+        setTopReviewedProducts(result);
+      } else {
+      }
+    } catch (err) {
     }
   };
 
   useEffect(() => {
+    fetchTopProducts();
     fetchOrders();
     fetchWaiting();
     fetchTotalRevenueFromOrders();
+    fetchTopReviewedProducts();
   }, []);
 
-  const fetchOrders = async () => {
-    try {
-      const response = await getAllOrdersByDesAPI();
-      const items = response.items || [];
-      setTotalOrders(response.totalItems || 0);
-      const uniqueCustomers = [...new Set(items.map(order => order.customer?.name))];
-      setTotalCustomers(uniqueCustomers.length);
-    } catch (err) {
-      console.error('Error fetching orders:', err);
+  useEffect(() => {
+    console.log("topReviewedProducts state changed:", topReviewedProducts);
+  }, [topReviewedProducts]);
+
+
+  useEffect(() => {
+    if (selectedMonth && selectedYear) {
+      fetchRevenueData(selectedMonth, selectedYear);
     }
-  };
+  }, [selectedMonth, selectedYear]);
 
   const fetchWaiting = async () => {
     try {
@@ -237,21 +297,33 @@ const DashboardDesigner = () => {
       <Card sx={{ mt: 4, p: 3, borderRadius: 3, boxShadow: 2 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={5}>
           <Typography variant="h6" fontWeight="bold">Doanh thu theo ngày trong tháng</Typography>
-          <FormControl size="small" sx={{ minWidth: 120 }}>
-            <Select value={selectedMonth} onChange={handleMonthChange}>
-              {[...Array(12).keys()].map(i => (
-                <MenuItem key={i + 1} value={i + 1}>{`Tháng ${i + 1}`}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Stack direction="row" spacing={2}>
+            <FormControl size="small" sx={{ minWidth: 120 }}>
+              <Select value={selectedMonth} onChange={handleMonthChange}>
+                {[...Array(12).keys()].map(i => (
+                  <MenuItem key={i + 1} value={i + 1}>{`Tháng ${i + 1}`}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl size="small" sx={{ minWidth: 100 }}>
+              <Select value={selectedYear} onChange={handleYearChange}>
+                {[currentYear - 2, currentYear - 1, currentYear].map(year => (
+                  <MenuItem key={year} value={year}>{year}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Stack>
         </Box>
+
         <Box sx={{ height: 300 }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={mockRevenueData}>
+            <LineChart data={revenueData}>
               <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
               <XAxis dataKey="day" />
               <YAxis tickFormatter={(v) => `${(v / 1000000).toFixed(1)}M`} />
-              <Tooltip formatter={(value) => `${value.toLocaleString()} VNĐ`} />
+              <Tooltip
+                formatter={(value) => [`${value.toLocaleString()} VNĐ`, 'Doanh thu']}
+              />
               <Line type="monotone" dataKey="revenue" stroke="#89B9AD" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
@@ -263,12 +335,11 @@ const DashboardDesigner = () => {
         {/* Bar chart top 5 sản phẩm */}
         <Grid item xs={12} md={6} sx={{ flex: 1 }}>
           <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
-            <Typography variant="h6" fontWeight="bold" mb={2}>Top 5 sản phẩm bán chạy</Typography>
+            <Typography variant="h6" fontWeight="bold" mb={2}>Top sản phẩm bán chạy</Typography>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={productData} layout="vertical">
+              <BarChart data={topProducts} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" height={20} tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-
                 <YAxis dataKey="name" type="category" />
                 <Tooltip />
                 <Bar dataKey="sales" fill="#4DA8DA" barSize={25} />
@@ -278,13 +349,13 @@ const DashboardDesigner = () => {
         </Grid>
 
         {/* Donut chart trạng thái đơn hàng */}
-        <Grid item xs={12} md={6} sx={{ flex: 0.5 }}>
+        <Grid item xs={12} md={6} sx={{ flex: 0.8 }}>
           <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
             <Typography variant="h6" fontWeight="bold" mb={2}>Trạng thái đơn hàng</Typography>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={statusData}
+                  data={orderStatusData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -293,8 +364,11 @@ const DashboardDesigner = () => {
                   dataKey="value"
                   label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                 >
-                  {statusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  {orderStatusData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={statusColorMap[entry.rawStatus] || "#ccc"}
+                    />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -302,19 +376,20 @@ const DashboardDesigner = () => {
             </ResponsiveContainer>
           </Card>
         </Grid>
+
       </Grid>
 
       {/* Danh sách feedback chia theo sản phẩm */}
       <Grid container spacing={2} mt={4}>
-        {Object.entries(feedbackByProduct).map(([productName, feedbacks]) => (
-          <Grid item xs={12} md={4} key={productName} sx={{ flex: 1 }}>
+        {Array.isArray(topReviewedProducts) && topReviewedProducts.map(product => (
+          <Grid item xs={12} md={4} key={product.productId} sx={{ flex: 1 }}>
             <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2 }}>
-              <Typography variant="h6" fontWeight="bold" mb={2}>{productName}</Typography>
+              <Typography variant="h6" fontWeight="bold" mb={2}>{product.productName}</Typography>
               <Box
                 sx={{
                   maxHeight: 200,
                   overflowY: 'auto',
-                  pr: 1, // thêm padding tránh sát mép phải
+                  pr: 1,
                   '&::-webkit-scrollbar': {
                     width: '6px',
                     display: 'none',
@@ -331,15 +406,29 @@ const DashboardDesigner = () => {
                   },
                 }}
               >
-                {feedbacks.map(feedback => (
-                  <Box key={feedback.id} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Avatar src={feedback.image} alt={productName} sx={{ mr: 2 }} />
-                    <Box>
-                      <Typography variant="body2" color="textSecondary">Khách: {feedback.customer}</Typography>
-                      <Typography variant="body2">{feedback.feedback}</Typography>
+                {product.reviews && product.reviews.length > 0 ? (
+                  product.reviews.map((review, idx) => (
+                    <Box key={idx} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Avatar sx={{ mr: 2 }} />
+                      <Box>
+                        <Typography variant="body2" color="textSecondary">
+                          Khách: {review.customer?.name || 'Ẩn danh'}
+                        </Typography>
+                        <Typography variant="body2">
+                          {review.comment || 'Không có bình luận'}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          {review.date || 'Không rõ ngày'}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                ))}
+                  ))
+                ) : (
+                  <Typography variant="body2" color="textSecondary">
+                    Chưa có đánh giá
+                  </Typography>
+                )}
+
               </Box>
             </Card>
           </Grid>

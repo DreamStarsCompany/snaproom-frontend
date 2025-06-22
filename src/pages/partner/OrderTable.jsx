@@ -95,18 +95,28 @@ export default function OrderTable() {
                                         renderValue: (selected) => {
                                             if (!selected) return "Tất cả";
                                             switch (selected) {
-                                                case "Processing": return "Processing";
-                                                case "Buy": return "Buy";
-                                                case "Completed": return "Completed";
-                                                default: return "";
+                                                case "Pending":
+                                                    return "Chờ xác nhận";
+                                                case "Processing":
+                                                    return "Đang xử lí";
+                                                case "Delivered":
+                                                    return "Giao thành công";
+                                                case "Refunded":
+                                                    return "Hoàn tiền";
+                                                case "Cancelled":
+                                                    return "Hủy";
+                                                default:
+                                                    return "";
                                             }
                                         }
                                     }}
                                 >
                                     <MenuItem value="">Tất cả</MenuItem>
-                                    <MenuItem value="Processing">Processing</MenuItem>
-                                    <MenuItem value="Buy">Buy</MenuItem>
-                                    <MenuItem value="Completed">Completed</MenuItem>
+                                    <MenuItem value="Pending">Chờ xác nhận</MenuItem>
+                                    <MenuItem value="Processing">Đang xử lí</MenuItem>
+                                    <MenuItem value="Delivered">Giao thành công</MenuItem>
+                                    <MenuItem value="Refunded">Hoàn tiền</MenuItem>
+                                    <MenuItem value="Cancelled">Hủy</MenuItem>
                                 </TextField>
                             </Box>
                         </Box>

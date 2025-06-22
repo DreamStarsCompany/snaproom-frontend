@@ -66,6 +66,16 @@ const AdminOrderDetail = ({ orderId }) => {
 
     if (!order) return <Typography>Không có dữ liệu đơn hàng để hiển thị.</Typography>;
 
+    const statusLabelMap = {
+        Pending: 'Chờ xác nhận',
+        Processing: 'Đang xử lý',
+        Delivered: 'Đã giao hàng',
+        Refund: 'Hoàn tiền',
+        Cancelled: 'Đã hủy',
+        Completed: 'Hoàn tất',
+        Buy: 'Đã mua',
+    };
+
     return (
         <Box sx={{ p: 4 }}>
             <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
@@ -81,20 +91,27 @@ const AdminOrderDetail = ({ orderId }) => {
                 <Typography variant="subtitle1">
                     📌 Trạng thái hiện tại:
                     <Chip
-                        label={order.status}
+                        label={statusLabelMap[order.status] || order.status}
                         sx={{
                             ml: 1,
                             color: '#fff',
                             bgcolor:
-                                order.status === 'Completed'
-                                    ? '#4CAF50'
+                                order.status === 'Pending'
+                                    ? '#9E9E9E'
                                     : order.status === 'Processing'
                                         ? '#FF9800'
-                                        : order.status === 'Buy'
-                                            ? '#2196F3'
-                                            : '#9E9E9E',
+                                        : order.status === 'Delivered'
+                                            ? '#347433'
+                                            : order.status === 'Refund'
+                                                ? '#FF6F3C'
+                                                : order.status === 'Cancelled'
+                                                    ? '#B22222'
+                                                    : '#B22222',
+                            minWidth: 120,
+                            textAlign: 'center'
                         }}
                     />
+
                 </Typography>
             </Paper>
 
@@ -130,22 +147,27 @@ const AdminOrderDetail = ({ orderId }) => {
             {order.statuses.map((s, index) => (
                 <Box key={index} sx={{ mb: 1 }}>
                     <Chip
-                        label={s.name}
+                        label={statusLabelMap[s.name] || s.name}
                         sx={{
                             mr: 2,
                             color: '#fff',
                             bgcolor:
-                                s.name === 'Completed'
-                                    ? '#4CAF50'
+                                s.name === 'Pending'
+                                    ? '#9E9E9E'
                                     : s.name === 'Processing'
                                         ? '#FF9800'
-                                        : s.name === 'Buy'
-                                            ? '#2196F3'
-                                            : '#9E9E9E',
-                            minWidth: 100,      
+                                        : s.name === 'Delivered'
+                                            ? '#347433'
+                                            : s.name === 'Refund'
+                                                ? '#FF6F3C'
+                                                : s.name === 'Cancelled'
+                                                    ? '#B22222'
+                                                    : '#B22222',
+                            minWidth: 120,
                             textAlign: 'center'
                         }}
                     />
+
                     <Typography component="span">{formatDateTime(s.time)}</Typography>
                 </Box>
             ))}

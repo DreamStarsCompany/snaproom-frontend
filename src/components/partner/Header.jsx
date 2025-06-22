@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   InputBase,
-  IconButton,
   Avatar,
   Typography,
   Menu,
   MenuItem,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -88,10 +86,6 @@ const Header = () => {
 
       {/* Right Section */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-        {/* Notifications */}
-        <IconButton sx={{ color: '#2e3a25' }}>
-          <NotificationsIcon />
-        </IconButton>
 
         {/* Language Menu */}
         <Box
