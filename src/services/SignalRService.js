@@ -8,21 +8,20 @@ let connection = null;
  * @param {function} onReceiveMessage - Callback khi nhận được tin nhắn
  */
 export const startSignalRConnection = async (accessToken, onReceiveMessage) => {
-  console.log("🛠️ Đang thiết lập SignalR...");
+  console.log("Đang thiết lập SignalR...");
 
   if (connection && connection.state === "Connected") {
-    console.log("⚠️ SignalR đã được kết nối trước đó.");
+    console.log("✅ SignalR đã được kết nối trước đó.");
     return;
   }
 
   console.log("🔧 Tạo mới HubConnection...");
   connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://snaproom-e7asc0ercvbxazb8.southeastasia-01.azurewebsites.net/hubs/chat", {
+    .withUrl("https://snaproom-e7asc0ercvbxazb8.southeastasia-01.azurewebsites.net/chathub", {
       accessTokenFactory: () => {
         console.log("🔑 Tạo access token cho SignalR...");
         return accessToken;
       },
-      // withCredentials: true // ← nếu backend cần dùng cookie
     })
     .withAutomaticReconnect()
     .configureLogging(signalR.LogLevel.Information)
@@ -49,12 +48,12 @@ export const startSignalRConnection = async (accessToken, onReceiveMessage) => {
 
 /**
  * Gửi tin nhắn qua SignalR
- * @param {string} conversationId
  * @param {string} senderId
+ * @param {string} receiverId
  * @param {string} content
  */
-export const sendMessage = async (conversationId, senderId, content) => {
-  console.log(`📝 Đang gửi tin nhắn: "${content}" từ ${senderId} đến conversation ${conversationId}`);
+export const sendMessage = async (senderId, receiverId, content) => {
+  console.log(`📤 Đang gửi: "${content}" từ ${senderId} đến ${receiverId}`);
 
   if (!connection || connection.state !== signalR.HubConnectionState.Connected) {
     console.warn("⚠️ Không thể gửi tin nhắn: chưa kết nối SignalR.");
@@ -62,8 +61,8 @@ export const sendMessage = async (conversationId, senderId, content) => {
   }
 
   try {
-    await connection.invoke("SendMessage", conversationId, senderId, content);
-    console.log("📤 Tin nhắn đã gửi qua SignalR");
+    await connection.invoke("SendMessage", senderId, receiverId, content);
+    console.log("✅ Tin nhắn đã gửi qua SignalR");
   } catch (error) {
     console.error("❌ Lỗi khi gửi tin nhắn:", error);
   }
@@ -75,9 +74,9 @@ export const sendMessage = async (conversationId, senderId, content) => {
 export const stopSignalRConnection = async () => {
   if (connection) {
     try {
-      console.log("🧹 Đang ngắt kết nối SignalR...");
+      console.log("🔌 Đang ngắt kết nối SignalR...");
       await connection.stop();
-      console.log("🔌 Đã ngắt kết nối SignalR");
+      console.log("✅ Đã ngắt kết nối SignalR");
     } catch (error) {
       console.error("❌ Lỗi khi ngắt kết nối SignalR:", error);
     }

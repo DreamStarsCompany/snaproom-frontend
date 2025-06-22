@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Box, Typography, Avatar, List, ListItemButton, ListItemAvatar, ListItemText,
     Divider, InputBase, Paper, IconButton, TextField
@@ -10,11 +10,12 @@ import { startSignalRConnection, sendMessage, stopSignalRConnection } from '../.
 import { jwtDecode } from 'jwt-decode';
 
 const Chat = () => {
+    const bottomRef = useRef(null);
+    const selectedConversationIdRef = useRef(null);
     const [newMessage, setNewMessage] = useState('');
     const [conversations, setConversations] = useState([]);
     const [messages, setMessages] = useState([]);
     const [selectedConversationId, setSelectedConversationId] = useState(null);
-    const [loadingMessages, setLoadingMessages] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [userId, setUserId] = useState(null);
 
@@ -36,16 +37,19 @@ const Chat = () => {
         }
     }, []);
 
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
+
     // Fetch conversations on mount
     useEffect(() => {
         const fetchConversations = async () => {
-            setLoadingMessages(true);
             try {
                 const data = await getAllConversationsAPI();
                 if (Array.isArray(data)) {
                     setConversations(data);
                     if (data.length > 0) {
-                        await handleSelectConversation(data[0].id); 
+                        await handleSelectConversation(data[0].id);
                     }
                 } else {
                     console.warn('Dữ liệu conversations không hợp lệ:', data);
@@ -53,8 +57,6 @@ const Chat = () => {
             } catch (err) {
                 console.error('Lỗi khi fetch conversations:', err);
                 setConversations([]);
-            } finally {
-                setLoadingMessages(false);
             }
         };
 
@@ -65,24 +67,23 @@ const Chat = () => {
     const handleSelectConversation = async (id) => {
         if (!id) return;
         setSelectedConversationId(id);
-        setLoadingMessages(true);
         try {
             const res = await getConversationByIdAPI(id);
-            setMessages(Array.isArray(res.data) ? res.data : []);
+            setMessages(Array(res.data) ? res.data : []);
         } catch (err) {
             console.error(`Lỗi khi lấy tin nhắn cho conversation ${id}:`, err);
             setMessages([]);
-        } finally {
-            setLoadingMessages(false);
         }
     };
+
+    useEffect(() => {
+        selectedConversationIdRef.current = selectedConversationId;
+    }, [selectedConversationId]);
 
     // Kết nối SignalR và nhận message real-time
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) return;
-
-        let isMounted = true;
 
         const setupSignalR = async () => {
             try {
@@ -95,13 +96,23 @@ const Chat = () => {
                 setUserId(uid);
 
                 await startSignalRConnection(token, (msg) => {
-                    if (!isMounted) return;
-                    console.log("📥 Received message:", msg);
-
-                    // Nếu là message cho conversation hiện tại
-                    if (msg.conversationId === selectedConversationId) {
-                        setMessages((prev) => [msg, ...prev]); // prepend do column-reverse
+                    if (msg.conversationId === selectedConversationIdRef.current) {
+                        setMessages(prev => [...prev, msg]);
                     }
+
+                    // ✅ Thêm đoạn này để cập nhật lastMessage cho conversation
+                    setConversations(prev => {
+                        return prev.map(conv => {
+                            if (conv.id === msg.conversationId) {
+                                return {
+                                    ...conv,
+                                    lastMessage: msg.content,
+                                    lastMessageTime: msg.createdTime
+                                };
+                            }
+                            return conv;
+                        });
+                    });
                 });
             } catch (err) {
                 console.error('Lỗi khi thiết lập SignalR:', err);
@@ -110,12 +121,10 @@ const Chat = () => {
 
         setupSignalR();
 
-        // Cleanup khi unmount
         return () => {
-            isMounted = false;
             stopSignalRConnection();
         };
-    }, [selectedConversationId]);
+    }, []);
 
     // Gửi tin nhắn
     const handleSend = async () => {
@@ -128,10 +137,42 @@ const Chat = () => {
         }
 
         try {
-            await sendMessage(selectedConversationId, userId, messageToSend);
+            // 🔍 Tìm receiverId từ tin nhắn trong cuộc trò chuyện (loại trừ userId hiện tại)
+            const receiverId = messages.find(msg => msg.senderId !== userId)?.senderId;
+
+            if (!receiverId) {
+                console.warn("Không tìm thấy receiverId từ message history");
+                return;
+            }
+
+            const fakeMessage = {
+                content: messageToSend,
+                senderId: userId,
+                senderAvatar: conversations.find(c => c.id === selectedConversationId)?.sender?.avatar || '',
+                createdTime: new Date().toISOString(),
+                conversationId: selectedConversationId,
+            };
+
+            setMessages(prev => [...prev, fakeMessage]);
             setNewMessage('');
+            setConversations(prev => {
+                return prev.map(conv => {
+                    if (conv.id === selectedConversationId) {
+                        return {
+                            ...conv,
+                            lastMessage: messageToSend,
+                            lastMessageTime: new Date().toISOString()
+                        };
+                    }
+                    return conv;
+                });
+            });
+
+            // ✅ Gửi đúng thứ tự mới: senderId, receiverId, content
+            await sendMessage(userId, receiverId, messageToSend);
+            console.log("📤 Tin nhắn đã gửi qua SignalR");
         } catch (err) {
-            console.error("Lỗi khi gửi tin nhắn:", err);
+            console.error("❌ Lỗi khi gửi tin nhắn:", err);
         }
     };
 
@@ -275,7 +316,7 @@ const Chat = () => {
                         flexGrow: 1,
                         overflowY: 'auto',
                         display: 'flex',
-                        flexDirection: 'column-reverse',
+                        flexDirection: 'column',
                         minHeight: 0,
                         pb: 1,
                     }}
@@ -338,6 +379,7 @@ const Chat = () => {
                                 })}
                             </React.Fragment>
                         ))}
+                        <div ref={bottomRef} />
                     </Box>
                 </Box>
 
@@ -359,6 +401,7 @@ const Chat = () => {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                        autoComplete="off"
                         InputProps={{
                             disableUnderline: true,
                             sx: { pl: 2 }
