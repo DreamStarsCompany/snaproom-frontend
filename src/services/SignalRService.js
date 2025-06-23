@@ -2,85 +2,71 @@ import * as signalR from "@microsoft/signalr";
 
 let connection = null;
 
-/**
- * Khởi tạo và bắt đầu kết nối SignalR
- * @param {string} accessToken - Token xác thực
- * @param {function} onReceiveMessage - Callback khi nhận được tin nhắn
- */
-export const startSignalRConnection = async (accessToken, onReceiveMessage) => {
-  console.log("Đang thiết lập SignalR...");
+export const getSignalRConnection = () => connection;
 
-  if (connection && connection.state === "Connected") {
-    console.log("✅ SignalR đã được kết nối trước đó.");
+export const startSignalRConnection = async (accessToken, onReceiveMessage) => {
+  if (connection && connection.state === signalR.HubConnectionState.Connected) {
+    console.log("✅ Đã kết nối SignalR.");
     return;
   }
 
-  console.log("🔧 Tạo mới HubConnection...");
   connection = new signalR.HubConnectionBuilder()
     .withUrl("https://snaproom-e7asc0ercvbxazb8.southeastasia-01.azurewebsites.net/chathub", {
-      accessTokenFactory: () => {
-        console.log("🔑 Tạo access token cho SignalR...");
-        return accessToken;
-      },
+      accessTokenFactory: () => accessToken,
     })
     .withAutomaticReconnect()
-    .configureLogging(signalR.LogLevel.Information)
+    .configureLogging(signalR.LogLevel.Warning)
     .build();
 
-  console.log("📡 Đăng ký lắng nghe 'ReceiveMessage'...");
   connection.on("ReceiveMessage", (message) => {
-    console.log("📥 Tin nhắn mới từ server:", message);
-    try {
+    console.log("📥 Nhận tin nhắn:", message);
+    if (typeof onReceiveMessage === "function") {
       onReceiveMessage(message);
-    } catch (err) {
-      console.error("❌ Lỗi xử lý ReceiveMessage:", err);
     }
   });
 
   try {
-    console.log("🚀 Bắt đầu kết nối SignalR...");
     await connection.start();
-    console.log("✅ SignalR đã kết nối thành công");
+    console.log("✅ Kết nối SignalR thành công");
   } catch (error) {
-    console.error("❌ Lỗi khi kết nối SignalR:", error);
+    console.error("❌ Kết nối SignalR thất bại:", error);
   }
 };
 
-/**
- * Gửi tin nhắn qua SignalR
- * @param {string} senderId
- * @param {string} receiverId
- * @param {string} content
- */
-export const sendMessage = async (senderId, receiverId, content) => {
-  console.log(`📤 Đang gửi: "${content}" từ ${senderId} đến ${receiverId}`);
+export const joinConversation = async (conversationId) => {
+  const conn = getSignalRConnection();
+  if (!conn || conn.state !== signalR.HubConnectionState.Connected) return;
 
-  if (!connection || connection.state !== signalR.HubConnectionState.Connected) {
-    console.warn("⚠️ Không thể gửi tin nhắn: chưa kết nối SignalR.");
+  try {
+    await conn.invoke("JoinConversation", conversationId);
+    console.log(`📡 Đã tham gia nhóm: ${conversationId}`);
+  } catch (error) {
+    console.error("❌ Lỗi khi join group:", error);
+  }
+};
+
+export const sendMessage = async (senderId, receiverId, content) => {
+  const conn = getSignalRConnection();
+  if (!conn || conn.state !== signalR.HubConnectionState.Connected) {
+    console.warn("⚠️ Không thể gửi tin: chưa kết nối SignalR.");
     return;
   }
 
   try {
-    await connection.invoke("SendMessage", senderId, receiverId, content);
-    console.log("✅ Tin nhắn đã gửi qua SignalR");
+    await conn.invoke("SendMessage", senderId, receiverId, content);
+    console.log("✅ Đã gửi tin nhắn:", content);
   } catch (error) {
-    console.error("❌ Lỗi khi gửi tin nhắn:", error);
+    console.error("❌ Gửi tin nhắn thất bại:", error);
   }
 };
 
-/**
- * Ngắt kết nối SignalR
- */
 export const stopSignalRConnection = async () => {
-  if (connection) {
-    try {
-      console.log("🔌 Đang ngắt kết nối SignalR...");
-      await connection.stop();
-      console.log("✅ Đã ngắt kết nối SignalR");
-    } catch (error) {
-      console.error("❌ Lỗi khi ngắt kết nối SignalR:", error);
-    }
-  } else {
-    console.log("ℹ️ Không có kết nối SignalR để ngắt.");
+  if (!connection) return;
+
+  try {
+    await connection.stop();
+    console.log("🔌 Đã ngắt kết nối SignalR.");
+  } catch (error) {
+    console.error("❌ Lỗi khi ngắt kết nối:", error);
   }
 };
