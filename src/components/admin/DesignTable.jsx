@@ -24,10 +24,10 @@ const DesignTable = ({ searchTerm }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getAllDesignsAPI(); 
+        const res = await getAllDesignsAPI();
         const items = res.data.items || [];
         setAllDesigns(items);
-        setFilteredDesigns(items); 
+        setFilteredDesigns(items);
       } catch (err) {
         console.error('Error fetching designs:', err);
       }
@@ -41,7 +41,7 @@ const DesignTable = ({ searchTerm }) => {
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredDesigns(filtered);
-    setPage(1); // reset về trang 1 khi tìm kiếm
+    setPage(1);
   }, [searchTerm, allDesigns]);
 
   const totalPages = Math.ceil(filteredDesigns.length / pageSize);
@@ -64,6 +64,7 @@ const DesignTable = ({ searchTerm }) => {
               <TableCell sx={{ color: '#f5f5f5' }}>Hình ảnh</TableCell>
               <TableCell sx={{ color: '#f5f5f5' }}>Tên</TableCell>
               <TableCell sx={{ color: '#f5f5f5' }}>Giá</TableCell>
+              <TableCell sx={{ color: '#f5f5f5' }}>Danh mục</TableCell>
               <TableCell sx={{ color: '#f5f5f5' }} align="center">Quản lí</TableCell>
             </TableRow>
           </TableHead>
@@ -87,6 +88,19 @@ const DesignTable = ({ searchTerm }) => {
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.price.toLocaleString()}đ</TableCell>
+
+                <TableCell>
+                  <Box sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                    {[
+                      item.style?.name,
+                      ...(item.categories?.map((cat) => cat.name) || []),
+                    ]
+                      .filter(Boolean)
+                      .map((name) => name.toLowerCase())
+                      .join(', ')}
+                  </Box>
+                </TableCell>
+
                 <TableCell align="center">
                   <IconButton color="primary" size="small">
                     <EditIcon />

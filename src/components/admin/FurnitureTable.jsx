@@ -41,7 +41,7 @@ const FurnitureTable = ({ searchTerm }) => {
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredFurnitures(filtered);
-    setPage(1); // Reset về trang 1 khi search
+    setPage(1);
   }, [searchTerm, allFurnitures]);
 
   const totalPages = Math.ceil(filteredFurnitures.length / pageSize);
@@ -64,6 +64,7 @@ const FurnitureTable = ({ searchTerm }) => {
               <TableCell sx={{ color: '#f5f5f5' }}>Hình ảnh</TableCell>
               <TableCell sx={{ color: '#f5f5f5' }}>Tên</TableCell>
               <TableCell sx={{ color: '#f5f5f5' }}>Giá</TableCell>
+              <TableCell sx={{ color: '#f5f5f5' }}>Danh mục</TableCell>
               <TableCell sx={{ color: '#f5f5f5' }} align="center">Quản lí</TableCell>
             </TableRow>
           </TableHead>
@@ -85,9 +86,21 @@ const FurnitureTable = ({ searchTerm }) => {
                     }}
                   />
                 </TableCell>
-
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.price.toLocaleString()}đ</TableCell>
+
+                <TableCell>
+                  <Box sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                    {[
+                      item.style?.name,
+                      ...(item.categories?.map((cat) => cat.name) || []),
+                    ]
+                      .filter(Boolean)
+                      .map((name) => name.toLowerCase())
+                      .join(', ')}
+                  </Box>
+                </TableCell>
+
                 <TableCell align="center">
                   <IconButton color="primary" size="small">
                     <EditIcon />

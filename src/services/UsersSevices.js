@@ -502,8 +502,21 @@ const getConversationByIdAPI = async (id) => {
   }
 };
 
+const getTotalReviewsAPI = async () => {
+  try {
+    const response = await instance.get('/api/dashboard/total-reviews');
+    console.log('Total reviews:', response.data);
+    return response.data?.totalReviews ?? 0;
+  } catch (error) {
+    console.error('Error getting total reviews:', error.response?.data || error.message);
+    return 0;
+  }
+};
+
+
 
 export {
+  getTotalReviewsAPI,
   getAllConversationsAPI,
   getConversationByIdAPI,
   getTopProductsWithReviewsAPI,

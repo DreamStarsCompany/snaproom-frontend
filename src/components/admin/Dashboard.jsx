@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Box, Grid, Card, Typography, Avatar, Stack, MenuItem, Select, FormControl } from '@mui/material';
 import GroupsIcon from '@mui/icons-material/Groups';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import RateReviewIcon from '@mui/icons-material/RateReview';
 import {
+  getTotalReviewsAPI,
   getAllAccountsAPI,
-  getNewProductsAPI,
   getRevenueByDayAPI,
   getAllOrdersAPI,
   getTopDesignersByRevenueAPI,
@@ -32,6 +30,8 @@ import {
 // import { Tooltip as MuiTooltip } from '@mui/material';
 
 const Dashboard = () => {
+  const [totalTransactions, setTotalTransactions] = useState(0);
+  const [totalReviews, setTotalReviews] = useState(0);
   const [orderTotalRevenue, setOrderTotalRevenue] = useState(0);
   const currentYear = new Date().getFullYear();
 
@@ -43,13 +43,16 @@ const Dashboard = () => {
   const [designerData, setDesignerData] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
   const [totalDesigners, setTotalDesigners] = useState(0);
-  const [totalProducts, setTotalProducts] = useState(0);
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
       fetchRevenueData(selectedMonth, selectedYear);
     }
   }, [selectedMonth, selectedYear]);
+
+  useEffect(() => {
+  console.log('State cập nhật totalReviews:', totalReviews);
+}, [totalReviews]);
 
   const fetchRevenueData = async (month, year) => {
     try {
@@ -69,6 +72,16 @@ const Dashboard = () => {
       setRevenueData(cleanData);
     } catch (err) {
       console.error('Lỗi khi lấy doanh thu theo ngày:', err);
+    }
+  };
+
+  const fetchTotalTransactions = async () => {
+    try {
+      const res = await getAllOrdersAPI();
+      const total = res?.totalItems || 0;
+      setTotalTransactions(total);
+    } catch (err) {
+      console.error('Lỗi khi lấy tổng số giao dịch:', err);
     }
   };
 
@@ -144,12 +157,23 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchAccounts();
-    fetchData();
     fetchTopDesigners();
     fetchTotalRevenueFromOrders();
     fetchOrderSystemData();
     fetchCustomerGrowth();
+    fetchTotalReviews();
+    fetchTotalTransactions();
   }, []);
+
+  const fetchTotalReviews = async () => {
+    try {
+      const total = await getTotalReviewsAPI();
+      console.log('Tổng đánh giá nhận được từ API:', total);
+      setTotalReviews(total);
+    } catch (err) {
+      console.error('Lỗi khi lấy tổng số đánh giá:', err);
+    }
+  };
 
   const fetchAccounts = async () => {
     try {
@@ -159,16 +183,6 @@ const Dashboard = () => {
       setTotalDesigners(designerCount);
     } catch (err) {
       console.error('Error fetching accounts:', err);
-    }
-  };
-
-  const fetchData = async () => {
-    try {
-      const res = await getNewProductsAPI();
-      const total = res?.items?.length || 0;
-      setTotalProducts(total);
-    } catch (err) {
-      console.error('Error fetching products:', err);
     }
   };
 
@@ -189,12 +203,6 @@ const Dashboard = () => {
               Tổng nhà thiết kế
             </Typography>
             <Typography variant="h4" fontWeight="bold" mt={1}>{totalDesigners}</Typography>
-
-            <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
-              <TrendingUpIcon sx={{ color: 'green', fontSize: 20 }} />
-              <Typography variant="body2" sx={{ color: 'green', fontWeight: 500 }}>8.5%</Typography>
-              <Typography variant="body2" color="textSecondary">So với hôm qua</Typography>
-            </Stack>
           </Card>
         </Grid>
 
@@ -203,24 +211,19 @@ const Dashboard = () => {
           <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2, height: '70%', position: 'relative' }}>
             <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
               <Avatar sx={{ bgcolor: '#FDEBD3', width: 56, height: 56 }}>
-                <AccessTimeIcon sx={{ color: '#F59E0B', fontSize: 30 }} />
+                <RateReviewIcon sx={{ color: '#F59E0B', fontSize: 30 }} />
               </Avatar>
             </Box>
 
             <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
-              Nhà thiết kế chờ duyệt
+              Tổng số đánh giá
             </Typography>
-            <Typography variant="h4" fontWeight="bold" mt={1}>0</Typography>
+            <Typography variant="h4" fontWeight="bold" mt={1}>{totalReviews}</Typography>
 
-            <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
-              <TrendingDownIcon sx={{ color: 'red', fontSize: 20 }} />
-              <Typography variant="body2" sx={{ color: 'red', fontWeight: 500 }}>0.3%</Typography>
-              <Typography variant="body2" color="textSecondary">So với hôm qua</Typography>
-            </Stack>
           </Card>
         </Grid>
 
-        {/* Total Pending */}
+
         <Grid item xs={12} sm={6} md={3} sx={{ flex: 1 }}>
           <Card sx={{ p: 3, borderRadius: 3, boxShadow: 2, height: '70%', position: 'relative' }}>
             <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
@@ -230,17 +233,13 @@ const Dashboard = () => {
             </Box>
 
             <Typography variant="body2" color="textSecondary" fontWeight={500} marginBottom={2}>
-              Sản phẩm chờ duyệt
+              Tổng số giao dịch
             </Typography>
-            <Typography variant="h4" fontWeight="bold" mt={1}>{totalProducts}</Typography>
+            <Typography variant="h4" fontWeight="bold" mt={1}>{totalTransactions}</Typography>
 
-            <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
-              <TrendingUpIcon sx={{ color: 'green', fontSize: 20 }} />
-              <Typography variant="body2" sx={{ color: 'green', fontWeight: 500 }}>1.8%</Typography>
-              <Typography variant="body2" color="textSecondary">So với hôm qua</Typography>
-            </Stack>
           </Card>
         </Grid>
+
 
         {/* Total Sales */}
         <Grid item xs={12} sm={6} md={3} sx={{ flex: 1 }}>
@@ -262,12 +261,6 @@ const Dashboard = () => {
               }
             </Typography>
 
-
-            <Stack direction="row" alignItems="center" spacing={0.5} mt={2}>
-              <TrendingDownIcon sx={{ color: 'red', fontSize: 20 }} />
-              <Typography variant="body2" sx={{ color: 'red', fontWeight: 500 }}>4.3%</Typography>
-              <Typography variant="body2" color="textSecondary">So với hôm qua</Typography>
-            </Stack>
           </Card>
         </Grid>
 

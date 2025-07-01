@@ -27,7 +27,7 @@ const FurList = ({ searchTerm }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getAllFursByDesAPI(); 
+        const res = await getAllFursByDesAPI();
         const items = res.data.items || [];
         setAllFurnitures(items);
         setFilteredFurnitures(items);
@@ -67,6 +67,7 @@ const FurList = ({ searchTerm }) => {
               <TableCell sx={{ color: '#f5f5f5' }}>Hình ảnh</TableCell>
               <TableCell sx={{ color: '#f5f5f5' }}>Tên</TableCell>
               <TableCell sx={{ color: '#f5f5f5' }}>Giá</TableCell>
+              <TableCell sx={{ color: '#f5f5f5' }}>Danh mục</TableCell>
               <TableCell sx={{ color: '#f5f5f5' }} align="center">Quản lí</TableCell>
             </TableRow>
           </TableHead>
@@ -90,6 +91,17 @@ const FurList = ({ searchTerm }) => {
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.price.toLocaleString()}đ</TableCell>
+                <TableCell>
+                  <Box sx={{ whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                    {[
+                      item.style?.name,
+                      ...(item.categories?.map((cat) => cat.name) || []),
+                    ]
+                      .filter(Boolean)
+                      .map((name) => name.toLowerCase())
+                      .join(', ')}
+                  </Box>
+                </TableCell>
                 <TableCell align="center">
                   <IconButton color="primary" size="small" onClick={() => navigate(routes.furnitureDetail.replace(":id", item.id))}>
                     <EditIcon />
