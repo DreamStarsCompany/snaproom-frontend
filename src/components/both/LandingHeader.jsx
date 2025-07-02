@@ -12,7 +12,11 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  useMediaQuery
+  useMediaQuery,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { routes } from "../../routes";
@@ -31,6 +35,10 @@ const menuItems = [
 ];
 
 const LandingHeader = () => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleOpenDialog = () => setOpenDialog(true);
+  const handleCloseDialog = () => setOpenDialog(false);
+
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -179,7 +187,7 @@ const LandingHeader = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                whileHover={{ scale: 1.1 }}  
+                whileHover={{ scale: 1.1 }}
               />
 
             </Box>
@@ -187,6 +195,7 @@ const LandingHeader = () => {
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
               <Button
                 variant="contained"
+                onClick={handleOpenDialog}
                 sx={{
                   minWidth: "15vh",
                   backgroundColor: '#FFFFFF',
@@ -231,6 +240,48 @@ const LandingHeader = () => {
           </Box>
         </motion.div>
       </Box>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        PaperProps={{
+          sx: {
+            backgroundColor: '#3F5139',
+            color: 'white',
+            textAlign: 'center',
+            px: 4,
+            py: 3,
+            borderRadius: 3,
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
+          Thông báo
+        </DialogTitle>
+
+        <DialogContent>
+          <Typography sx={{ fontSize: '1rem', mt: 1 }}>
+            Vui lòng sử dụng điện thoại để tải ứng dụng.
+          </Typography>
+        </DialogContent>
+
+        <DialogActions sx={{ justifyContent: 'center', gap: 2, mt: 2 }}>
+        <Button
+            variant="outlined"
+            href="https://drive.google.com/file/d/1AMjsixdbQd60tZJrDPhZBraoVU1HoOO8/view?usp=sharing" 
+            target="_blank"
+            sx={{
+              borderColor: 'white',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'white',
+                color: '#3F5139',
+              }
+            }}
+          >
+            Tải tại đây
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

@@ -25,6 +25,7 @@ const FurnitureDetail = () => {
     const [selectedCategoryIds, setSelectedCategoryIds] = useState(['']);
     const [primaryImage, setPrimaryImage] = useState(null);
     const [images, setImages] = useState([]);
+    const [removePrimaryImage, setRemovePrimaryImage] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,9 +43,12 @@ const FurnitureDetail = () => {
                 setPrice(fur.price || '');
                 setDescription(fur.description || '');
                 setActive(fur.active);
-                setSelectedStyleId(fur.styleId || '');
-                setSelectedCategoryIds(fur.categoryIds || ['']);
-                // Hình ảnh sẽ chọn lại mới khi cập nhật
+                setSelectedStyleId(fur.style?.id || '');
+                setSelectedCategoryIds(fur.categories?.map(c => c.id) || ['']);
+                if (fur.primaryImage?.imageSource) {
+                    setPrimaryImage({ preview: fur.primaryImage.imageSource, file: null });
+                }
+
             } catch (error) {
                 console.error(error);
                 alert('Lỗi khi tải dữ liệu thiết kế');
@@ -66,7 +70,12 @@ const FurnitureDetail = () => {
             selectedCategoryIds.filter(Boolean).forEach(id => {
                 formData.append('CategoryIds', id);
             });
-            if (primaryImage) formData.append('PrimaryImage', primaryImage);
+            if (removePrimaryImage) {
+                formData.append('RemovePrimaryImage', 'true');
+            } else if (primaryImage?.file) {
+                formData.append('PrimaryImage', primaryImage.file);
+            }
+
             images.forEach(img => formData.append('Images', img));
 
             await updateFurnitureAPI(id, formData);
@@ -88,14 +97,14 @@ const FurnitureDetail = () => {
         <Paper elevation={3} sx={{ borderRadius: 3, maxWidth: 1200, mx: 'auto' }}>
             <Box sx={{ bgcolor: mainColor, p: 2, borderTopLeftRadius: 12, borderTopRightRadius: 12 }}>
                 <Typography variant="h5" color="#fff" align="center" fontWeight={600}>
-                    Cập nhật bản thiết kế
+                    Cập nhật nội thất
                 </Typography>
             </Box>
 
             <Box component="form" noValidate autoComplete="off" sx={{ p: 4 }}>
                 <Box display="flex" gap={3} alignItems="center">
                     <TextField
-                        fullWidth label="Tên bản thiết kế" value={name}
+                        fullWidth label="Tên bản nội thất" value={name}
                         onChange={(e) => setName(e.target.value)}
                         variant="outlined"
                     />
@@ -204,20 +213,53 @@ const FurnitureDetail = () => {
 
                 <Box mt={3}>
                     <Typography>Ảnh chính</Typography>
-                    <input type="file" accept="image/*" onChange={(e) => {
-                        const file = e.target.files[0];
-                        setPrimaryImage(file);
-                    }} />
+
+                    {/* Nếu có ảnh hiện tại */}
                     {primaryImage && (
-                        <Box mt={1}>
+                        <Box mt={1} position="relative" display="inline-block">
                             <img
-                                src={URL.createObjectURL(primaryImage)}
+                                src={primaryImage.preview}
                                 alt="Primary Preview"
                                 style={{ width: 250, borderRadius: 8 }}
                             />
+                            <IconButton
+                                size="small"
+                                onClick={() => {
+                                    setPrimaryImage(null);
+                                    setRemovePrimaryImage(true);
+                                }}
+                                sx={{
+                                    position: 'absolute',
+                                    top: 4,
+                                    right: 4,
+                                    backgroundColor: 'rgba(255,255,255,0.7)',
+                                    '&:hover': { backgroundColor: 'red', color: 'white' }
+                                }}
+                            >
+                                ×
+                            </IconButton>
                         </Box>
                     )}
+
+                    {/* Nếu ảnh cũ bị xóa, mới cho chọn ảnh mới */}
+                    {!primaryImage && (
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                    setPrimaryImage({
+                                        preview: URL.createObjectURL(file),
+                                        file: file
+                                    });
+                                    setRemovePrimaryImage(false);
+                                }
+                            }}
+                        />
+                    )}
                 </Box>
+
 
                 <Box mt={3}>
                     <Typography>Ảnh phụ</Typography>

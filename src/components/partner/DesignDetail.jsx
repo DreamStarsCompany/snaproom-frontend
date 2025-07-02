@@ -22,8 +22,9 @@ const UpdateDesign = () => {
     const [categoriesStyle0, setCategoriesStyle0] = useState([]);
     const [selectedStyleId, setSelectedStyleId] = useState('');
     const [selectedCategoryIds, setSelectedCategoryIds] = useState(['']);
-    const [primaryImage, setPrimaryImage] = useState(null);
     const [images, setImages] = useState([]);
+    const [primaryImage, setPrimaryImage] = useState(null); // { preview: string, file: File|null }
+    const [removePrimaryImage, setRemovePrimaryImage] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,8 +42,13 @@ const UpdateDesign = () => {
                 setPrice(design.price || '');
                 setDescription(design.description || '');
                 setActive(design.active);
-                setSelectedStyleId(design.styleId || '');
-                setSelectedCategoryIds(design.categoryIds || ['']);
+                setSelectedStyleId(design.style?.id || '');
+                setSelectedCategoryIds(design.categories?.map(c => c.id) || ['']);
+
+                if (design.primaryImage?.imageSource) {
+                    setPrimaryImage({ preview: design.primaryImage.imageSource, file: null });
+                }
+
                 // Hình ảnh sẽ chọn lại mới khi cập nhật
             } catch (error) {
                 console.error(error);
@@ -64,9 +70,11 @@ const UpdateDesign = () => {
             selectedCategoryIds.filter(Boolean).forEach(id => {
                 formData.append('CategoryIds', id);
             });
-            if (primaryImage) formData.append('PrimaryImage', primaryImage);
-            images.forEach(img => formData.append('Images', img));
-
+            if (removePrimaryImage) {
+                formData.append('RemovePrimaryImage', 'true');
+            } else if (primaryImage?.file) {
+                formData.append('PrimaryImage', primaryImage.file);
+            }
             await updateDesignAPI(id, formData);
             alert('Cập nhật thành công!');
             navigate(routes.designList);
@@ -166,7 +174,7 @@ const UpdateDesign = () => {
                                             },
                                         },
                                     }}
-                                >                           
+                                >
                                     {categoriesStyle0.map(cat => (
                                         <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
                                     ))}
@@ -194,18 +202,48 @@ const UpdateDesign = () => {
 
                 <Box mt={3}>
                     <Typography>Ảnh chính</Typography>
-                    <input type="file" accept="image/*" onChange={(e) => {
-                        const file = e.target.files[0];
-                        setPrimaryImage(file);
-                    }} />
+
                     {primaryImage && (
-                        <Box mt={1}>
+                        <Box mt={1} position="relative" display="inline-block">
                             <img
-                                src={URL.createObjectURL(primaryImage)}
+                                src={primaryImage.preview}
                                 alt="Primary Preview"
                                 style={{ width: 250, borderRadius: 8 }}
                             />
+                            <IconButton
+                                size="small"
+                                onClick={() => {
+                                    setPrimaryImage(null);
+                                    setRemovePrimaryImage(true);
+                                }}
+                                sx={{
+                                    position: 'absolute',
+                                    top: 4,
+                                    right: 4,
+                                    backgroundColor: 'rgba(255,255,255,0.7)',
+                                    '&:hover': { backgroundColor: 'red', color: 'white' }
+                                }}
+                            >
+                                ×
+                            </IconButton>
                         </Box>
+                    )}
+
+                    {!primaryImage && (
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                    setPrimaryImage({
+                                        preview: URL.createObjectURL(file),
+                                        file: file
+                                    });
+                                    setRemovePrimaryImage(false);
+                                }
+                            }}
+                        />
                     )}
                 </Box>
 
