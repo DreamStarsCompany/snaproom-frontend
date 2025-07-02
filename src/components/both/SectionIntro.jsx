@@ -17,7 +17,7 @@ const items = [
     {
         img: intro_section,
         title: 'Chất lượng',
-        description: 'Chất lượng của các sản phẩm nội thất được kiểm định nghiêm ngặt, đảm bảo độ bền, thẩm mỹ cao.',
+        description: 'Chất lượng của các sản phẩm nội thất được kiểm định nghiêm ngặt, đảm bảo độ bền, thẩm mỹ',
     },
     {
         img: intro_section2,
