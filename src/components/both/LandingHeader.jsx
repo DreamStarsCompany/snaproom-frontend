@@ -269,7 +269,7 @@ const LandingHeader = () => {
         <DialogActions sx={{ justifyContent: 'center', gap: 2, mt: 2 }}>
         <Button
             variant="outlined"
-            href="https://drive.google.com/file/d/1AMjsixdbQd60tZJrDPhZBraoVU1HoOO8/view?usp=sharing" 
+            href="https://drive.google.com/file/d/1dUQp2CHMViSG7YrO1hRtdlrWa0TyciSP/view?usp=sharing" 
             target="_blank"
             sx={{
               borderColor: 'white',
