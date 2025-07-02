@@ -243,6 +243,8 @@ const LandingHeader = () => {
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
+        fullWidth
+        maxWidth= 'xs'
         PaperProps={{
           sx: {
             backgroundColor: '#3F5139',
