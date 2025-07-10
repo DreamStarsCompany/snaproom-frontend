@@ -513,9 +513,20 @@ const getTotalReviewsAPI = async () => {
   }
 };
 
+const updateOrderStatusAPI = async (orderId, status) => {
+  try {
+    const response = await instance.get(`/api/orders/${orderId}/${status}`);
+    console.log('Order status updated:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating order status:', error.response?.data || error.message);
+    throw error;
+  }
+};
 
 
 export {
+  updateOrderStatusAPI,
   getTotalReviewsAPI,
   getAllConversationsAPI,
   getConversationByIdAPI,
